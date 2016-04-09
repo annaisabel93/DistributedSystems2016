@@ -7,6 +7,8 @@ import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 import pt.upa.transporter.ws.TransporterPort;
 
 public class TransporterApplication {
+	
+	public void switchState(){}
 
 	public static void main(String[] args) throws Exception {
 				// Check arguments

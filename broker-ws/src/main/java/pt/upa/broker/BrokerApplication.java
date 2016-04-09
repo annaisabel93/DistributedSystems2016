@@ -1,5 +1,8 @@
 package pt.upa.broker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.ws.Endpoint;
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 
@@ -8,7 +11,24 @@ import pt.upa.broker.ws.BrokerPort;
 
 public class BrokerApplication {
 
+	//FIXME not sure if here
+	public String TripStatus(){
+		
+		List<String> Status = new ArrayList<String>();
+		Status.add("REQUESTED");
+		Status.add("BUDGETED");
+		Status.add("BOOKED");
+		Status.add("FAILED");
+		Status.add("HEADING");
+		Status.add("ONGOING");
+		Status.add("COMPLETED");
+		
+		
+		return null;
+		
+	}
 	public static void main(String[] args) throws Exception {
+		
 		System.out.println(BrokerApplication.class.getSimpleName() + " starting...");
 
 		if(args.length<3)

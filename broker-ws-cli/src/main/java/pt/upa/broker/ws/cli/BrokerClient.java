@@ -1,12 +1,12 @@
 package pt.upa.broker.ws.cli;
 
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.ws.BindingProvider;
+
 import pt.upa.broker.ws.BrokerPortType;
 import pt.upa.broker.ws.BrokerService;
 import pt.upa.broker.ws.InvalidPriceFault;
@@ -27,7 +27,7 @@ public class BrokerClient implements BrokerPortType {
             service = new BrokerService();
             port = service.getBrokerPort();
 
-            System.out.println("Setting endpoint address ...");
+    		System.out.println("Setting endpoint address ...");
             BindingProvider bindingProvider = (BindingProvider) port;
             Map<String, Object> requestContext = bindingProvider.getRequestContext();
             requestContext.put(ENDPOINT_ADDRESS_PROPERTY, URL);
@@ -47,7 +47,6 @@ public class BrokerClient implements BrokerPortType {
 		if (price < 0) {
 			throw new InvalidPriceFault_Exception("Price not valid!", new InvalidPriceFault());
 		}
-		
 		
 		
 		List<ArrayList<String>> Cities = new ArrayList<ArrayList<String>>();
