@@ -18,8 +18,29 @@ import pt.upa.transporter.ws.cli.TransporterClient;
 )
 
 public class BrokerPort implements BrokerPortType{
+	
+	
 	/** UDDI Naming instance for contacting UDDI server */
-	private UDDINaming uddiNaming = null;
+	private UDDINaming uddiNaming;
+
+	
+	private String uddiUrl;
+	private String name;
+	private String url;
+	
+	public BrokerPort(String uddiURL1, String name1, String url1){
+		this.uddiUrl = uddiURL1;
+		this.name = name1;
+		this.url = url1;
+		try{
+			this.uddiNaming = new UDDINaming(uddiURL1);
+			this.uddiNaming.rebind(name, url);
+		}
+		catch (JAXRException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	/** Get UDDI Naming instance for contacting UDDI server */
 	UDDINaming getUddiNaming() {
@@ -43,7 +64,6 @@ public class BrokerPort implements BrokerPortType{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		// uddi.list("upatransp%") - usa-se o método list e vamos buscar tudo o que começa por upatransporter
 		//for (cada endereço recebido) 
 		//	new transporter client(URL)

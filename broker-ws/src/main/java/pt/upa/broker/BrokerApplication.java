@@ -46,7 +46,7 @@ public class BrokerApplication {
 		UDDINaming uddiNaming = null;try
 
 		{
-			BrokerPort port = new BrokerPort();
+			BrokerPort port = new BrokerPort(uddiURL, name, url);
 			endpoint = Endpoint.create(port);
 
 			// publish endpoint
