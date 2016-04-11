@@ -58,11 +58,11 @@
 			<version>1.0</version>
 		</dependency>
 		
-<!-- 		<dependency>
+		<dependency>
 			<groupId>pt.upa.a38</groupId>
 			<artifactId>transporter-ws-cli</artifactId>
 			<version>1.0-SNAPSHOT</version>
-		</dependency> -->
+		</dependency>
 	</dependencies>
 
 	<build>
