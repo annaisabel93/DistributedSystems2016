@@ -12,7 +12,7 @@ import pt.upa.broker.ws.BrokerPort;
 public class BrokerApplication {
 
 	//FIXME not sure if here
-	public String TripStatus(){
+	public List<String> TransportStatus(){
 		
 		List<String> Status = new ArrayList<String>();
 		Status.add("REQUESTED");
@@ -24,7 +24,7 @@ public class BrokerApplication {
 		Status.add("COMPLETED");
 		
 		
-		return null;
+		return Status;
 		
 	}
 	public static void main(String[] args) throws Exception {
