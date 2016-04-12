@@ -19,7 +19,7 @@ import pt.upa.transporter.ws.BadPriceFault;
 )
 public class TransporterPort implements TransporterPortType{
 	
-	private ArrayList<JobView> jobs = new ArrayList<JobView>();
+	private List<JobView> jobs = new ArrayList<JobView>();
 	private List<ArrayList<String>> Cities = new ArrayList<ArrayList<String>>();
 	private List<String> Norte = new ArrayList<String>();
 	private List<String> Centro = new ArrayList<String>();
@@ -161,19 +161,27 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public JobView jobStatus(String id) {
-		// TODO Auto-generated method stub
+		for(JobView job: jobs){
+			if(job.getJobIdentifier().equals(id)){ //percorre os jobs
+				return job;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public List<JobView> listJobs() {
-		// TODO Auto-generated method stub
+	public List<JobView> listJobs() { //retorna a lista de jobs 
+		if(jobs.isEmpty() == false){
+			return jobs;
+		}
 		return null;
 	}
 
 	@Override
-	public void clearJobs() {
-		// TODO Auto-generated method stub
+	public void clearJobs() { //apaga todos os jobs que ja foram criados , da Lista
+		for(JobView job: jobs){
+			jobs.remove(job);
+		}
 		
 	}
 
