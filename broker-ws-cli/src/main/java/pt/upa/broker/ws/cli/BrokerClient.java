@@ -20,19 +20,17 @@ import pt.upa.broker.ws.UnknownTransportFault_Exception;
 
 public class BrokerClient implements BrokerPortType {
 
-    BrokerService service;
-    BrokerPortType port;
+    BrokerService service = new BrokerService();
+    BrokerPortType port = service.getBrokerPort();
 
     public BrokerClient(String URL) {
-            service = new BrokerService();
-            port = service.getBrokerPort();
 
-    		System.out.println("Setting endpoint address ...");
-            BindingProvider bindingProvider = (BindingProvider) port;
-            Map<String, Object> requestContext = bindingProvider.getRequestContext();
-            requestContext.put(ENDPOINT_ADDRESS_PROPERTY, URL);
+    	System.out.println("Setting endpoint address ...");
+    	BindingProvider bindingProvider = (BindingProvider) port;
+    	Map<String, Object> requestContext = bindingProvider.getRequestContext();
+    	requestContext.put(ENDPOINT_ADDRESS_PROPERTY, URL);
     }
-	
+
 	
 	@Override
 	public String ping(String name) {
@@ -43,71 +41,23 @@ public class BrokerClient implements BrokerPortType {
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
-		
-		if (price < 0) {
-			throw new InvalidPriceFault_Exception("Price not valid!", new InvalidPriceFault());
-		}
-		
-		
-		List<ArrayList<String>> Cities = new ArrayList<ArrayList<String>>();
-		List<String> Norte = new ArrayList<String>();
-		List<String> Centro = new ArrayList<String>();
-		List<String> Sul = new ArrayList<String>();
-		
-		Norte.add("Porto");
-		Norte.add("Viana do Castelo");
-		Norte.add("Vila Real");
-		Norte.add("Bragança");
-		Cities.add((ArrayList<String>) Norte);
-		
-		Centro.add("Lisboa");
-		Centro.add("Leiria");
-		Centro.add("Santarém");
-		Centro.add("Castelo Branco");
-		Centro.add("Coimbra");
-		Centro.add("Aveiro");
-		Centro.add("Viseu");
-		Centro.add("Guarda");
-		Cities.add((ArrayList<String>) Centro);
-		
-		
-		Sul.add("Setúbal");
-		Sul.add("Évora");
-		Sul.add("Portalegre");
-		Sul.add("Beja");
-		Sul.add("Faro");
-		Cities.add((ArrayList<String>) Sul);
-		
-		
-		if (Cities.contains(destination) & Cities.contains(origin)) {
-			
-		}
-		else
-			throw new UnknownLocationFault_Exception("Invalid Location", new UnknownLocationFault());
-		
-		System.out.println(Cities);
-		
-		return null;
+			return port.requestTransport(origin, destination, price);
 	}
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return port.viewTransport(id);
 	}
 
 	@Override
 	public List<TransportView> listTransports() {
-		// TODO Auto-generated method stub
-		return null;
+		return port.listTransports();
 	}
 
 	@Override
 	public void clearTransports() {
-		// TODO Auto-generated method stub
-		
+		port.clearTransports();	
 	}
 
-	// TODO
 
 }

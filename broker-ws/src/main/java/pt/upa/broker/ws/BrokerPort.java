@@ -1,13 +1,18 @@
 package pt.upa.broker.ws;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jws.WebService;
-import javax.xml.bind.JAXBException;
 import javax.xml.registry.JAXRException;
 
+import org.apache.juddi.v3.client.transport.Transport;
+
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
+import pt.upa.transporter.ws.BadLocationFault_Exception;
+import pt.upa.transporter.ws.BadPriceFault_Exception;
+import pt.upa.transporter.ws.JobView;
 import pt.upa.transporter.ws.cli.TransporterClient;
 
 @WebService(
@@ -81,21 +86,12 @@ public class BrokerPort implements BrokerPortType{
 		String ping = "";
 		//try {
 			//urls = uddiNaming.list("UpaTransporter%");
-			pings += "\nFound " + urls.size() + "\n";
+			pings += "\n Found " + urls.size() + "\n";
 			for(String url: urls){
 				TransporterClient client = new TransporterClient(url);
 				ping = client.ping("broker");
 				pings = pings + "\n" + url + " " + ping;
 			}
-		/*	
-		} catch (JAXRException e) {
-			pings += "Failed to contact UDDI: " + e;
-		}*/
-		// uddi.list("upatransp%") - usa-se o método list e vamos buscar tudo o que começa por upatransporter
-		//for (cada endereço recebido) 
-		//	new transporter client(URL)
-		//	client.ping
-		//juntar pings numa string e fazer return do status
 		return pings;
 	}
 
@@ -103,26 +99,58 @@ public class BrokerPort implements BrokerPortType{
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			List<TransporterClient> transporters = listTransporterClients();
+			for(TransporterClient t: transporters){
+				t.requestJob(origin, destination, price);
+				
+			}
+				
+		} catch (JAXRException e) {
+			e.printStackTrace();
+		} catch (BadLocationFault_Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPriceFault_Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return null;	
 	}
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
-		// TODO Auto-generated method stub
+		//FIXME
+		TransportView transport = null;
+		try {
+			transport = viewTransport(id);
+			TransportStateView state = transport.getState();
+		} catch (UnknownTransportFault_Exception e) {
+			e.printStackTrace();
+		}
+		
+		TransporterClient client = new TransporterClient(url);
+		JobView job = client.jobStatus(id);
+		
+		
 		return null;
+
 	}
 
 	@Override
 	public List<TransportView> listTransports() {
-		// TODO Auto-generated method stub
-		return null;
+		List<TransportView> transports = listTransports();
+		return transports;
 	}
 
 	@Override
 	public void clearTransports() {
-		// TODO Auto-generated method stub
-		
+		List<TransportView> transports = listTransports();
+		transports.clear();
+		TransporterClient client = new TransporterClient(url);
+		client.clearJobs();	
 	}
 
 	// TODO
