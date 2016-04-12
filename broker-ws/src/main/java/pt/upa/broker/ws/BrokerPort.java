@@ -25,7 +25,7 @@ public class BrokerPort implements BrokerPortType{
 	/** UDDI Naming instance for contacting UDDI server */
 	private UDDINaming uddiNaming;
 
-	
+	private List<TransportView> transports = new ArrayList<TransportView>();
 	private String uddiUrl;
 	private String name;
 	private String url;
@@ -103,12 +103,19 @@ public class BrokerPort implements BrokerPortType{
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
+		TransportView transport = new TransportView();
+		transport.setDestination(destination);
+		transport.setOrigin(origin);
+		transport.setPrice(price);
+		
+		transports.add(transport);
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
