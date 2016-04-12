@@ -26,7 +26,6 @@ public class TransporterPort implements TransporterPortType{
 	private List<String> Sul = new ArrayList<String>();
 	
 	private int instanceNumber;
-	private int counter;
 
 	@Override
 	public String ping(String name) {
@@ -128,9 +127,8 @@ public class TransporterPort implements TransporterPortType{
 			}
 		}
 		
-		Integer x = (Integer) counter;
-		job.setJobIdentifier(x.toString());
-		this.counter +=1;
+		String id = destination+"/"+origin+"/"+price;
+		job.setJobIdentifier(id);
 		
 		return job;
 		
@@ -161,6 +159,7 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public JobView jobStatus(String id) {
+		
 		for(JobView job: jobs){
 			if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 				return job;
