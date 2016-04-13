@@ -30,7 +30,7 @@ public class BrokerPort implements BrokerPortType{
 	/** UDDI Naming instance for contacting UDDI server */
 	private UDDINaming uddiNaming;
 
-	
+	private List<TransportView> transports = new ArrayList<TransportView>();
 	private String uddiUrl;
 	private String name;
 	private String url;
@@ -99,6 +99,14 @@ public class BrokerPort implements BrokerPortType{
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
+		
+		TransportView transport = new TransportView();
+		transport.setDestination(destination);
+		transport.setOrigin(origin);
+		transport.setPrice(price);
+		
+		transports.add(transport);
+		
 		try {
 			List<TransporterClient> transporters = listTransporterClients();
 			for(TransporterClient t: transporters){
@@ -122,17 +130,17 @@ public class BrokerPort implements BrokerPortType{
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
-		//FIXME
-		TransportView transport = null;
-		try {
-			transport = viewTransport(id);
-			TransportStateView state = transport.getState();
-		} catch (UnknownTransportFault_Exception e) {
-			e.printStackTrace();
+		TransportView t = null;
+		for (TransportView transport : transports) {
+			if (transport.getId().equals(id)) {
+				t = transport;
+			}
 		}
 		
 		TransporterClient client = new TransporterClient(url);
 		JobView job = client.jobStatus(id);
+		//FIXME
+
 		
 		
 		return null;

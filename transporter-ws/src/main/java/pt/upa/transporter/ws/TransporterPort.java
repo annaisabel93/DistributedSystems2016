@@ -179,9 +179,7 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public void clearJobs() { //apaga todos os jobs que ja foram criados , da Lista
-		for(JobView job: jobs){
-			jobs.remove(job);
-		}
+		jobs.clear();
 		
 	}
 
