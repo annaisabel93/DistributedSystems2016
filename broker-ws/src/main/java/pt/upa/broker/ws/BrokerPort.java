@@ -1,13 +1,10 @@
 package pt.upa.broker.ws;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jws.WebService;
 import javax.xml.registry.JAXRException;
-
-import org.apache.juddi.v3.client.transport.Transport;
 
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 import pt.upa.transporter.ws.BadLocationFault_Exception;
@@ -48,7 +45,7 @@ public class BrokerPort implements BrokerPortType{
 		}
 	}
 	
-
+	
 	/** Get UDDI Naming instance for contacting UDDI server */
 	UDDINaming getUddiNaming() {
 		return uddiNaming;
@@ -90,6 +87,7 @@ public class BrokerPort implements BrokerPortType{
 			for(String url: urls){
 				TransporterClient client = new TransporterClient(url);
 				ping = client.ping("broker");
+				System.out.println("ping-->"+ping);
 				pings = pings + "\n" + url + " " + ping;
 			}
 		return pings;
@@ -104,43 +102,50 @@ public class BrokerPort implements BrokerPortType{
 		transport.setDestination(destination);
 		transport.setOrigin(origin);
 		transport.setPrice(price);
-		
-		transports.add(transport);
-		
+		List<TransporterClient> list;
 		try {
 			List<TransporterClient> transporters = listTransporterClients();
-			for(TransporterClient t: transporters){
-				t.requestJob(origin, destination, price);
-				
+			for(TransporterClient client : transporters){
+				int x = transporters.indexOf(client);
+				Integer test = (Integer) x;
+				origin = origin +"/" + test.toString();
+			try {
+				client.requestJob(origin, destination, price);
+			} catch (BadLocationFault_Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPriceFault_Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-				
+		}
 		} catch (JAXRException e) {
-			e.printStackTrace();
-		} catch (BadLocationFault_Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadPriceFault_Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		int x = 0;
 		
-		return null;	
+		transports.add(transport);
+		
+		return "Transport Requested by Broker";
 	}
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
+		//FIXME so much
 		TransportView t = null;
 		for (TransportView transport : transports) {
 			if (transport.getId().equals(id)) {
 				t = transport;
+				TransportStateView state = t.getState();
+				t.setState(state);
 			}
+		
 		}
 		
 		TransporterClient client = new TransporterClient(url);
 		JobView job = client.jobStatus(id);
-		//FIXME
-
 		
 		
 		return null;

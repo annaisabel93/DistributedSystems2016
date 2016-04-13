@@ -1,9 +1,12 @@
 package pt.upa.transporter.ws.cli;
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+//import javax.xml.registry.JAXRException;
 import javax.xml.ws.BindingProvider;
 
 import pt.upa.transporter.ws.BadJobFault_Exception;
@@ -30,6 +33,23 @@ public class TransporterClient implements TransporterPortType{
                 requestContext.put(ENDPOINT_ADDRESS_PROPERTY, URL);
         }
 
+        
+//        private List<TransporterClient> listTransporterClients() throws JAXRException {
+//    		Collection<String> urlList = listTransporters();
+//    		List<TransporterClient> clientList =  new ArrayList<TransporterClient>();
+//    		for(String url: urlList){
+//    			clientList.add(new TransporterClient(url));
+//    		}
+//    		return clientList;
+//    	}
+//    	
+//    	private Collection<String> listTransporters() throws JAXRException {
+//    		Collection<String> urls;
+//    		urls = uddiNaming.list("UpaTransporter%");
+//    		return urls;
+//    	}
+    	
+        
         @Override
         public String ping(String name) {
                 return port.ping(name);
@@ -39,31 +59,27 @@ public class TransporterClient implements TransporterPortType{
 @Override
         public JobView requestJob(String origin, String destination, int price)
                         throws BadLocationFault_Exception, BadPriceFault_Exception {
-                // TODO Auto-generated method stub
-                return null;
+               return port.requestJob(origin, destination, price);
         }
 
         @Override
         public JobView decideJob(String id, boolean accept) throws BadJobFault_Exception {
-                // TODO Auto-generated method stub
-                return null;
+                return port.decideJob(id, accept);
         }
 
         @Override
         public JobView jobStatus(String id) {
-                // TODO Auto-generated method stub
-                return null;
+                return port.jobStatus(id);
         }
 
         @Override
         public List<JobView> listJobs() {
-                // TODO Auto-generated method stub
-                return null;
+                return port.listJobs();
         }
 
         @Override
         public void clearJobs() {
-                // TODO Auto-generated method stub
+               port.clearJobs();
 
         }
         // TODO
