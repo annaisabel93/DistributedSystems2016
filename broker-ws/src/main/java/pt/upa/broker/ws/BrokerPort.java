@@ -8,6 +8,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.registry.JAXRException;
 
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
+import pt.upa.transporter.ws.BadLocationFault_Exception;
+import pt.upa.transporter.ws.BadPriceFault_Exception;
 import pt.upa.transporter.ws.cli.TransporterClient;
 
 @WebService(
@@ -43,7 +45,7 @@ public class BrokerPort implements BrokerPortType{
 		}
 	}
 	
-
+	
 	/** Get UDDI Naming instance for contacting UDDI server */
 	UDDINaming getUddiNaming() {
 		return uddiNaming;
@@ -85,6 +87,7 @@ public class BrokerPort implements BrokerPortType{
 			for(String url: urls){
 				TransporterClient client = new TransporterClient(url);
 				ping = client.ping("broker");
+				System.out.println("ping-->"+ping);
 				pings = pings + "\n" + url + " " + ping;
 			}
 		/*	
@@ -107,9 +110,32 @@ public class BrokerPort implements BrokerPortType{
 		transport.setDestination(destination);
 		transport.setOrigin(origin);
 		transport.setPrice(price);
+		List<TransporterClient> list;
+		try {
+			list = listTransporterClients();
+			for(TransporterClient t : listTransporterClients()){
+				int x = list.indexOf(t);
+				Integer test = (Integer) x;
+				origin = origin +"/" + test.toString();
+			try {
+				t.requestJob(origin, destination, price);
+			} catch (BadLocationFault_Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPriceFault_Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		} catch (JAXRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int x = 0;
 		
 		transports.add(transport);
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

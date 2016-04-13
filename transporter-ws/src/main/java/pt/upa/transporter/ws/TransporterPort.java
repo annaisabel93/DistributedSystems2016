@@ -29,14 +29,25 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public String ping(String name) {
+		System.out.println("recebeu merda");
 		return "Transporter";
 	}
 
 	@Override
-	public JobView requestJob(String origin, String destination, int price)
-			throws BadLocationFault_Exception, BadPriceFault_Exception {
-	
-		boolean isPar = true;
+	public JobView requestJob(String origin, String destination, int price)throws BadLocationFault_Exception, BadPriceFault_Exception {
+		
+		
+        String[] splited = origin.split("/"); // parte a string para obter 
+        int instance = Integer.parseInt(splited[1]);
+        
+        boolean isPar = true;
+		
+		if(instance != 0){ // se for 0, fica par
+			if(instance%2 == 1){ //se for impar, muda o boolean
+				isPar = true;
+			}
+		}
+		
 		JobView job = new JobView();
 		
 	
