@@ -9,6 +9,7 @@ import javax.xml.registry.JAXRException;
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 import pt.upa.transporter.ws.BadLocationFault_Exception;
 import pt.upa.transporter.ws.BadPriceFault_Exception;
+import pt.upa.transporter.ws.JobStateView;
 import pt.upa.transporter.ws.JobView;
 import pt.upa.transporter.ws.cli.TransporterClient;
 
@@ -138,18 +139,43 @@ public class BrokerPort implements BrokerPortType{
 		for (TransportView transport : transports) {
 			if (transport.getId().equals(id)) {
 				t = transport;
-				TransportStateView state = t.getState();
-				t.setState(state);
-			}
-		
+			}		
 		}
 		
+		TransportStateView state = t.getState();
+		
 		TransporterClient client = new TransporterClient(url);
-		JobView job = client.jobStatus(id);
+		JobStateView job = client.jobStatus(id).getJobState();
 		
+		if (job.PROPOSED != null)
+			return t;
 		
-		return null;
-
+		if(job.ACCEPTED != null){
+			t.setState(state.BOOKED);
+			return t;
+		}
+			
+		if(job.REJECTED != null){
+			t.setState(state.FAILED);
+			return t;
+		}
+		
+		if (job.HEADING != null) {
+			t.setState(state.HEADING);
+			return t;
+		}
+		
+		if (job.ONGOING != null) {
+			t.setState(state.ONGOING);
+			return t;
+		}
+		
+		if (job.COMPLETED != null) {
+			t.setState(state.COMPLETED);
+			return t;
+		}
+		
+		return t;
 	}
 
 	@Override
@@ -162,10 +188,14 @@ public class BrokerPort implements BrokerPortType{
 	public void clearTransports() {
 		List<TransportView> transports = listTransports();
 		transports.clear();
-		TransporterClient client = new TransporterClient(url);
-		client.clearJobs();	
+		List<TransporterClient> clients;
+		try {
+			clients = listTransporterClients();
+			for (TransporterClient c : 	clients)
+				c.clearJobs();
+		} catch (JAXRException e) {
+			e.printStackTrace();
+		}
 	}
-
-	// TODO
 
 }
