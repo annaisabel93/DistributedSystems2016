@@ -19,13 +19,21 @@ import pt.upa.transporter.ws.BadPriceFault;
 )
 public class TransporterPort implements TransporterPortType{
 	
+	
+	
+	
+	
 	private List<JobView> jobs = new ArrayList<JobView>();
 	private List<ArrayList<String>> Cities = new ArrayList<ArrayList<String>>();
 	private List<String> Norte = new ArrayList<String>();
 	private List<String> Centro = new ArrayList<String>();
 	private List<String> Sul = new ArrayList<String>();
 	
-	private int instanceNumber;
+	private boolean isPar;
+	
+	public TransporterPort(boolean isPar){
+		this.isPar = isPar;
+	}
 
 	@Override
 	public String ping(String name) {
@@ -36,17 +44,6 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public JobView requestJob(String origin, String destination, int price)throws BadLocationFault_Exception, BadPriceFault_Exception {
 		
-		
-        String[] splited = origin.split("/"); // parte a string para obter 
-        int instance = Integer.parseInt(splited[1]);
-        
-        boolean isPar = true;
-		
-		if(instance != 0){ // se for 0, fica par
-			if(instance%2 == 1){ //se for impar, muda o boolean
-				isPar = true;
-			}
-		}
 		
 		JobView job = new JobView();
 		
@@ -193,6 +190,5 @@ public class TransporterPort implements TransporterPortType{
 		
 	}
 
-	// TODO
 
 }

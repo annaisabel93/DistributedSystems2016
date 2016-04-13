@@ -21,11 +21,17 @@ public class TransporterApplication {
 		String uddiURL = args[0];
 		String name = args[1];
 		String url = args[2];
-
+		int instance = Integer.parseInt(args[3]);
+		boolean isPar = true;
+		if(instance%2 == 1){
+			isPar = false;
+		}
+		
+		
 		Endpoint endpoint = null;
 		UDDINaming uddiNaming = null;
 		try {
-			TransporterPort port = new TransporterPort();
+			TransporterPort port = new TransporterPort(isPar);
 			endpoint = Endpoint.create(port);
 
 			// publish endpoint
