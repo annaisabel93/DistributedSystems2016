@@ -98,23 +98,16 @@ public class BrokerPort implements BrokerPortType{
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
-		System.out.println("vai comecar");
 		TransportView transport = new TransportView();
 		transport.setDestination(destination);
 		transport.setOrigin(origin);
 		transport.setPrice(price);
 		List<TransporterClient> list;
-		System.out.println("comecar ao try");
 		try {
 			List<TransporterClient> transporters = listTransporterClients();
 			for(TransporterClient client : transporters){
-				int x = transporters.indexOf(client);
-				Integer test = (Integer) x;
-				origin = origin +"/" + test.toString();
 			try {
-				System.out.println("vai chamar agora!!!!!!!!!!!!!!!!!!!!");
 				client.requestJob(origin, destination, price);
-				System.out.println("ja chamou :(");
 			} catch (BadLocationFault_Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

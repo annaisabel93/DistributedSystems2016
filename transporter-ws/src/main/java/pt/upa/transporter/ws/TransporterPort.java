@@ -43,7 +43,7 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public JobView requestJob(String origin, String destination, int price)throws BadLocationFault_Exception, BadPriceFault_Exception {
 		
-		
+		System.out.println("Recebeu: "+origin +" " +destination );
 		JobView job = new JobView();
 		
 	
