@@ -52,6 +52,10 @@ public class BrokerPort implements BrokerPortType{
 		return uddiNaming;
 	}
 	
+	public List<TransportView> getTransports() {
+		return transports;
+	}
+	
 	private List<TransporterClient> listTransporterClients() throws JAXRException {
 		Collection<String> urlList = listTransporters();
 		List<TransporterClient> clientList =  new ArrayList<TransporterClient>();
