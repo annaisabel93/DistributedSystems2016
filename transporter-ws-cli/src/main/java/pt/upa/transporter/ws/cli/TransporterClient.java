@@ -56,7 +56,7 @@ public class TransporterClient implements TransporterPortType{
         }
         
 
-@Override
+        @Override
         public JobView requestJob(String origin, String destination, int price)
                         throws BadLocationFault_Exception, BadPriceFault_Exception {
                return port.requestJob(origin, destination, price);

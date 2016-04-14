@@ -37,7 +37,6 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public String ping(String name) {
-		System.out.println("recebeu merda");
 		return "Transporter";
 	}
 
@@ -80,8 +79,7 @@ public class TransporterPort implements TransporterPortType{
 		Sul.add("Faro");
 		Cities.add((ArrayList<String>) Sul);
 		
-		
-		if (Cities.contains(destination) & Cities.contains(origin)) {
+		if ((Norte.contains(destination) || Centro.contains(destination) || Sul.contains(destination) )&( Norte.contains(origin) || Centro.contains(origin) || Sul.contains(origin))) {
 			if(isPar){//se for uma instancia par
 				if(Sul.contains(destination) || Sul.contains(origin)){ //caso seja par, nao pode ter nada do sul
 					return null;
