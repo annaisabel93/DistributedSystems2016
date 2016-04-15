@@ -102,11 +102,13 @@ public class TransporterPortTest {
 //	public void testListJobs() {
 //		fail("Not yet implemented");
 //	}
-//	
-//	@Test
-//	public void testClearJobs() {
-//		fail("Not yet implemented");
-//	}
+	
+	@Test
+	public void testClearJobs() {
+		TransporterPort localPort = new TransporterPort(true);
+		localPort.clearJobs();
+		assertNull(localPort.getJobs());
+	}
 
 	
 }
