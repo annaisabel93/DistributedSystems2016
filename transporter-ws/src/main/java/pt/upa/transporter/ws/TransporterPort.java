@@ -104,9 +104,6 @@ public class TransporterPort implements TransporterPortType{
 		jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
 		
 		//array to keep creation date
-		Date datejob = new Date();
-		
-		creationDates.add(datejob);
 		
 		if(price <= 10){
 			job.setJobPrice(price-1);
@@ -158,10 +155,16 @@ public class TransporterPort implements TransporterPortType{
 				if(accept){// se aceitou
 					job.setJobState(JobStateView.ACCEPTED);
 					toReturn = job;
+					Date datejob = new Date();
+					
+					creationDates.add(datejob);
 					break;
 				}
 				else{ // se rejeitou
 					job.setJobState(JobStateView.REJECTED);
+					Date datejob = new Date();
+					
+					creationDates.add(datejob);
 					toReturn = job;
 					break;
 				}
