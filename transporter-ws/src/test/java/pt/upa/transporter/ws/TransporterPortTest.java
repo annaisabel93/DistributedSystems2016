@@ -36,17 +36,17 @@ public class TransporterPortTest {
 			// Trabalhos com preco maior que 100 deviam devolver null
 			TransporterPort localPort1 = new TransporterPort(true);
 			assertNull(localPort1.requestJob("Porto", "Lisboa", 1000));
-			assertNull(localPort1.getJobs());
+			assertTrue(localPort1.getJobs().isEmpty());
 			
 			// Trabalhos com isPar==true e Faro(sul) como destino ou origem deviam ser null
 			TransporterPort localPort2 = new TransporterPort(true);
 			assertNull(localPort2.requestJob("Faro", "Porto", 10));
-			assertNull(localPort2.getJobs());
+			assertTrue(localPort2.getJobs().isEmpty());
 			
 			// Trabalhos com isPar==false e Porto(norte) como destino ou origem deviam ser null
 			TransporterPort localPort3 = new TransporterPort(false);
 			assertNull(localPort3.requestJob("Porto", "Faro", 10));
-			assertNull(localPort3.getJobs());
+			assertTrue(localPort2.getJobs().isEmpty());
 			
 			// Trabalho com preco par deve oferecer menos que o preco dado
 			TransporterPort localPort4 = new TransporterPort(true);
@@ -92,7 +92,7 @@ public class TransporterPortTest {
 			System.out.println("[TestDecideJob] Invalid job!");
 		}
 	}
-//	
+	
 //	@Test
 //	public void testJobStatus() {
 //		fail("Not yet implemented");
@@ -103,7 +103,7 @@ public class TransporterPortTest {
 		try {
 			
 			TransporterPort localPort = new TransporterPort(true);
-			assertNull(localPort.listJobs());
+			assertTrue(localPort.listJobs().isEmpty());
 
 			// E um trabalho valido, logo vai ser adicionado a lista jobs
 			JobView job = localPort.requestJob("Porto", "Lisboa", 11);
@@ -120,7 +120,7 @@ public class TransporterPortTest {
 	public void testClearJobs() {
 		TransporterPort localPort = new TransporterPort(true);
 		localPort.clearJobs();
-		assertNull(localPort.getJobs());
+		assertTrue(localPort.getJobs().isEmpty());
 	}
 
 	
