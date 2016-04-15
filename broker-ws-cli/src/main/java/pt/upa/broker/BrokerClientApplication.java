@@ -43,6 +43,10 @@ public class BrokerClientApplication {
             		TransportView job  = null;
             		System.out.println("done");
             		job = client.viewTransport(id);
+            		if(job == null){
+            			System.out.println("Nada com esse id....");
+            			continue;
+            		}
             		System.out.println("job:");
             		System.out.println("origin: "+ job.getOrigin());
             		System.out.println("destiny: " + job.getDestination());

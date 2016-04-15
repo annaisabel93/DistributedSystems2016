@@ -73,7 +73,7 @@ public class BrokerPort implements BrokerPortType{
 	
 	@Override
 	public String ping(String name){
-		Collection<String> urls = null;;
+		Collection<String> urls = null;
 		List<TransporterClient> clientList = null;
 		String pings = "Broker responding to: " + name;
 		System.out.println(pings);
@@ -105,11 +105,10 @@ public class BrokerPort implements BrokerPortType{
 		
 		System.out.println("origin: "+origin + "- destiny: " + destination + "price: " +  price);
 		
+		
+		
 		TransportView transport = new TransportView();
-		transport.setDestination(destination);
-		transport.setOrigin(origin);
-		transport.setPrice(price);
-		transport.setId(origin+destination+price);
+	
 		List<TransporterClient> list;
 		try {
 			List<TransporterClient> transporters = listTransporterClients();
@@ -117,10 +116,8 @@ public class BrokerPort implements BrokerPortType{
 			try {
 				client.requestJob(origin, destination, price);
 			} catch (BadLocationFault_Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (BadPriceFault_Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -131,6 +128,10 @@ public class BrokerPort implements BrokerPortType{
 		
 		int x = 0;
 		
+		transport.setDestination(destination);
+		transport.setOrigin(origin);
+		transport.setPrice(price);
+		transport.setId(origin+destination+price);
 		transports.add(transport);
 		
 		return "Transport Requested by Broker";
@@ -139,51 +140,63 @@ public class BrokerPort implements BrokerPortType{
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
 		
-		System.out.println("id: " + id);
 		TransportView t = null;
 		t =  transports.get(0);
-		System.out.println("id do primeiro: " + t.getId());
-		System.out.println(transports.size());
-		System.out.println("vai entrar no ciclo");
 		for (TransportView transport : transports) {
-			System.out.println("esta a ver o id...." +  t.getId());
 			if (transport.getId().equals(id)) {
 				t = transport;
 			}		
 		}
 		
+		List<TransporterClient> clients = null;
+		//TransporterClient client;
 		TransportStateView state = t.getState();
-		
-		TransporterClient client = new TransporterClient(url);
-		JobStateView job = client.jobStatus(id).getJobState();
-		
-		if (job.PROPOSED != null)
-			return t;
-		
-		if(job.ACCEPTED != null){
-			t.setState(state.BOOKED);
-			return t;
+		try {
+			clients = listTransporterClients();
+		} catch (JAXRException e) {
+			e.printStackTrace();
 		}
+		for(TransporterClient client: clients){
+			 JobView job1 = client.jobStatus(id);
+			 if(job1 == null){
+				 continue;
+			 }
+			JobStateView job =	job1.getJobState();
+			if(job == null){
+				System.out.println("null......");
+				continue;
+			}
+			if (job.PROPOSED != null)
+				return t;
 			
-		if(job.REJECTED != null){
-			t.setState(state.FAILED);
-			return t;
+			if(job.ACCEPTED != null){
+				t.setState(state.BOOKED);
+				return t;
+			}
+				
+			if(job.REJECTED != null){
+				t.setState(state.FAILED);
+				return t;
+			}
+			
+			if (job.HEADING != null) {
+				t.setState(state.HEADING);
+				return t;
+			}
+			
+			if (job.ONGOING != null) {
+				t.setState(state.ONGOING);
+				return t;
+			}
+			
+			if (job.COMPLETED != null) {
+				t.setState(state.COMPLETED);
+				return t;
+			}
 		}
+		;
+			
 		
-		if (job.HEADING != null) {
-			t.setState(state.HEADING);
-			return t;
-		}
-		
-		if (job.ONGOING != null) {
-			t.setState(state.ONGOING);
-			return t;
-		}
-		
-		if (job.COMPLETED != null) {
-			t.setState(state.COMPLETED);
-			return t;
-		}
 		
 		System.out.println("vai retornar o job com o id pedido");
 		

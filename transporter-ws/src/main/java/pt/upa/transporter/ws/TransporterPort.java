@@ -100,6 +100,7 @@ public class TransporterPort implements TransporterPortType{
 			throw new BadLocationFault_Exception("Invalid Location", new BadLocationFault());
 			//return null;
 		}
+		System.out.println("vai fazer add-----------------------------");
 		
 		jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
 		
@@ -189,12 +190,15 @@ public class TransporterPort implements TransporterPortType{
 		int rTime1 = r1.nextInt((5000-0)+1 +0);
 		int rTime2 = r2.nextInt((5000-0)+1 +0);
 		int rTime3 = r3.nextInt((5000-0)+1 +0);
-		System.out.println("chega auq");
-
-		for(JobView job: jobs){
+		if(jobList == null){
+			return null;
+		}
+		for(JobView job: jobList){
+			System.out.println("vai para for 1");
 			for(Date date : creationDates)
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 					if(job.getJobState() == JobStateView.ACCEPTED){
+						System.out.println("vai para if 2");
 						timer = new Date();
 						job.setJobState(JobStateView.HEADING);
 						if(timer.getTime() - date.getTime() > (rTime1 + rTime2)){
@@ -212,6 +216,7 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public List<JobView> listJobs() { //retorna a lista de jobs 
 		System.out.println("vai fazer o list");
+		System.out.println(jobs.isEmpty());
 		if(jobs.isEmpty() == false){
 			return jobs;
 		}
