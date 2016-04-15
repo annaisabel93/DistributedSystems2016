@@ -35,6 +35,10 @@ public class TransporterPort implements TransporterPortType{
 	public TransporterPort(boolean isPar){
 		this.isPar = isPar;
 	}
+	
+	public List<JobView> getJobs() {
+		return jobs;
+	}
 
 	@Override
 	public String ping(String name) {
