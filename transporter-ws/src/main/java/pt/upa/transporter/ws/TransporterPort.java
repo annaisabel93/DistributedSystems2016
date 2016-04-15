@@ -171,6 +171,9 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public JobView jobStatus(String id) {
+		
+		
+		System.out.println("vai ver o status");
 		List<JobView> jobList = listJobs();
 		
 		
@@ -182,7 +185,7 @@ public class TransporterPort implements TransporterPortType{
 		int rTime1 = r1.nextInt((5000-0)+1 +0);
 		int rTime2 = r2.nextInt((5000-0)+1 +0);
 		int rTime3 = r3.nextInt((5000-0)+1 +0);
-		
+		System.out.println("chega auq");
 
 		for(JobView job: jobs){
 			for(Date date : creationDates)
@@ -201,6 +204,7 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public List<JobView> listJobs() { //retorna a lista de jobs 
+		System.out.println("vai fazer o list");
 		if(jobs.isEmpty() == false){
 			return jobs;
 		}
@@ -209,7 +213,9 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public void clearJobs() { //apaga todos os jobs que ja foram criados , da Lista
+		System.out.println(jobs.size());
 		jobs.clear();
+		System.out.println(jobs.size());
 		
 	}
 

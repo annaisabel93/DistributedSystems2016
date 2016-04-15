@@ -102,10 +102,14 @@ public class BrokerPort implements BrokerPortType{
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
+		
+		System.out.println("origin: "+origin + "- destiny: " + destination + "price: " +  price);
+		
 		TransportView transport = new TransportView();
 		transport.setDestination(destination);
 		transport.setOrigin(origin);
 		transport.setPrice(price);
+		transport.setId(origin+destination+price);
 		List<TransporterClient> list;
 		try {
 			List<TransporterClient> transporters = listTransporterClients();
@@ -134,9 +138,15 @@ public class BrokerPort implements BrokerPortType{
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
-		//FIXME so much
+		
+		System.out.println("id: " + id);
 		TransportView t = null;
+		t =  transports.get(0);
+		System.out.println("id do primeiro: " + t.getId());
+		System.out.println(transports.size());
+		System.out.println("vai entrar no ciclo");
 		for (TransportView transport : transports) {
+			System.out.println("esta a ver o id...." +  t.getId());
 			if (transport.getId().equals(id)) {
 				t = transport;
 			}		
@@ -175,18 +185,24 @@ public class BrokerPort implements BrokerPortType{
 			return t;
 		}
 		
+		System.out.println("vai retornar o job com o id pedido");
+		
 		return t;
 	}
 
 	@Override
-	public List<TransportView> listTransports() {
-		List<TransportView> transports = listTransports();
+	public List<TransportView> listTransports() { //estava a criar um novo, nao estava a usar o global
+		
+		System.out.println("vai listar tudo");
 		return transports;
 	}
 
 	@Override
 	public void clearTransports() {
-		List<TransportView> transports = listTransports();
+		
+		System.out.println("vai apagar tudo");
+		
+		//estavas a chamar a funcao list, podes logo fazer clear
 		transports.clear();
 		List<TransporterClient> clients;
 		try {
