@@ -198,21 +198,34 @@ public class TransporterPort implements TransporterPortType{
 		if(jobList == null){
 			return null;
 		}
+		System.out.println("entra no for");
 		for(JobView job: jobList){
-			for(Date date : creationDates)
+			//for(Date date : creationDates)
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 					if(job.getJobState() == JobStateView.ACCEPTED){
 						timer = new Date();
-						job.setJobState(JobStateView.HEADING);
-						if(timer.getTime() - date.getTime() > (rTime1 + rTime2)){
-							job.setJobState(JobStateView.ONGOING);
-							if(timer.getTime() - date.getTime() > (rTime1 + rTime2 + rTime3))
-								job.setJobState(JobStateView.COMPLETED);
+						Date origin = creationDates.get(jobList.indexOf(job));
+						if((timer.getTime() - origin.getTime()) > 3000 ){
+							job.setJobState(JobStateView.HEADING);
 						}
 					}
-				return job;
+					if(job.getJobState() == JobStateView.HEADING){
+						timer = new Date();
+						Date origin = creationDates.get(jobList.indexOf(job));
+						if((timer.getTime() - origin.getTime()) > 3000 ){
+							job.setJobState(JobStateView.ONGOING);
+						}
+					}
+					if(job.getJobState() == JobStateView.ONGOING){
+						timer = new Date();
+						Date origin = creationDates.get(jobList.indexOf(job));
+						if((timer.getTime() - origin.getTime()) > 3000 ){
+							job.setJobState(JobStateView.COMPLETED);
+						}
+					}
+					return job;
+				}
 			}
-		}
 		return null;
 	}
 
