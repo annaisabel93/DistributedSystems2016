@@ -1,7 +1,7 @@
 package pt.upa.broker.ws.cli;
 
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,12 +9,10 @@ import javax.xml.ws.BindingProvider;
 
 import pt.upa.broker.ws.BrokerPortType;
 import pt.upa.broker.ws.BrokerService;
-import pt.upa.broker.ws.InvalidPriceFault;
 import pt.upa.broker.ws.InvalidPriceFault_Exception;
 import pt.upa.broker.ws.TransportView;
 import pt.upa.broker.ws.UnavailableTransportFault_Exception;
 import pt.upa.broker.ws.UnavailableTransportPriceFault_Exception;
-import pt.upa.broker.ws.UnknownLocationFault;
 import pt.upa.broker.ws.UnknownLocationFault_Exception;
 import pt.upa.broker.ws.UnknownTransportFault_Exception;
 
