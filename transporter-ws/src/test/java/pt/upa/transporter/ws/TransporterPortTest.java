@@ -61,17 +61,37 @@ public class TransporterPortTest {
 			assertTrue(localPort5.getJobs().get(0).getJobPrice() >= 11);
 			
 		} catch (BadLocationFault_Exception e) {
-			System.out.println("Invalid location");
+			System.out.println("[TestRequestJob] Invalid location");
 		} catch (BadPriceFault_Exception e) {
-			System.out.println("Invalid price");
+			System.out.println("[TestRequestJob] Invalid price");
 		}
 		
 	}
 	
-//	@Test
-//	public void testDecideJob() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	public void testDecideJob() {
+		try {
+			
+			TransporterPort localPort1 = new TransporterPort(true);
+			JobView job1 = localPort1.requestJob("Porto", "Lisboa", 11);
+			String id1 = job1.getJobIdentifier();
+			JobView decidedJob1 = localPort1.decideJob(id1, true);
+			assertEquals(JobStateView.ACCEPTED, decidedJob1.getJobState());
+			
+			TransporterPort localPort2 = new TransporterPort(true);
+			JobView job2 = localPort2.requestJob("Porto", "Lisboa", 11);
+			String id2 = job2.getJobIdentifier();
+			JobView decidedJob2 = localPort2.decideJob(id2, false);
+			assertEquals(JobStateView.REJECTED, decidedJob2.getJobState());
+			
+		} catch (BadLocationFault_Exception e) {
+			System.out.println("[TestDecideJob] Invalid location!");
+		} catch (BadPriceFault_Exception e) {
+			System.out.println("[TestDecideJob] Invalid price!");
+		} catch (BadJobFault_Exception e) {
+			System.out.println("[TestDecideJob] Invalid job!");
+		}
+	}
 //	
 //	@Test
 //	public void testJobStatus() {
