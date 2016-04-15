@@ -59,7 +59,8 @@ public class BrokerClientApplication {
             	break;
             }
          }
-        
+       // System.out.println("correu tudo --------------------"+request);
+      //  System.out.println("request 2: " + request2);
         }
       //  System.out.println("request 2: " + request2);
         
