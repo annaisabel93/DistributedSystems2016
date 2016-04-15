@@ -46,7 +46,7 @@ public class BrokerPortTest {
 //		assertEquals("destination", transport.getDestination());
 //		assertEquals(Integer.valueOf(10), transport.getPrice());
 //	}
-//	
+
 //	@Test
 //	public void testViewTransport() {
 //		TransportView transport = localPort.getTransports().get(0);
