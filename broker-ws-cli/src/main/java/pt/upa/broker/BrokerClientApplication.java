@@ -18,8 +18,6 @@ public class BrokerClientApplication {
         String result = client.ping("client");
         System.out.println(result);
         String request = client.requestTransport("Lisboa", "Faro", 100);
-       // String request2 = client.requestTransport("Lisboa", "Faro", 100);
-        System.out.println("correu tudo --------------------"+request);
         //menu para testar apenas
         while(true){
         	System.out.println("Acao a realizar: ");

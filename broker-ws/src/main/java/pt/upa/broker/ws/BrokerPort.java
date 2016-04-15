@@ -7,6 +7,7 @@ import javax.jws.WebService;
 import javax.xml.registry.JAXRException;
 
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
+import pt.upa.transporter.ws.BadJobFault_Exception;
 import pt.upa.transporter.ws.BadLocationFault_Exception;
 import pt.upa.transporter.ws.BadPriceFault_Exception;
 import pt.upa.transporter.ws.JobStateView;
@@ -29,6 +30,7 @@ public class BrokerPort implements BrokerPortType{
 	private UDDINaming uddiNaming;
 
 	private List<TransportView> transports = new ArrayList<TransportView>();
+	private List<TransportView> proposes = new ArrayList<TransportView>();
 	private String uddiUrl;
 	private String name;
 	private String url;
@@ -67,6 +69,7 @@ public class BrokerPort implements BrokerPortType{
 	
 	private Collection<String> listTransporters() throws JAXRException {
 		Collection<String> urls;
+		
 		urls = uddiNaming.list("UpaTransporter%");
 		return urls;
 	}
@@ -92,7 +95,6 @@ public class BrokerPort implements BrokerPortType{
 			for(String url: urls){
 				TransporterClient client = new TransporterClient(url);
 				ping = client.ping("broker");
-				System.out.println("ping-->"+ping);
 				pings = pings + "\n" + url + " " + ping;
 			}
 		return pings;
@@ -103,18 +105,25 @@ public class BrokerPort implements BrokerPortType{
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
 		
-		System.out.println("origin: "+origin + "- destiny: " + destination + "price: " +  price);
 		
 		
 		
 		TransportView transport = new TransportView();
-	
 		List<TransporterClient> list;
+		JobView job = null;
+		int bestPrice = 1000;
+		int companyIndex = 0;
 		try {
 			List<TransporterClient> transporters = listTransporterClients();
 			for(TransporterClient client : transporters){
 			try {
-				client.requestJob(origin, destination, price);
+				JobView job1 = client.requestJob(origin, destination, price);
+				if(job1 != null){
+					if(bestPrice > job1.getJobPrice()){
+						bestPrice = job1.getJobPrice();
+						companyIndex = transporters.indexOf(client);						
+					}
+				}
 			} catch (BadLocationFault_Exception e) {
 				e.printStackTrace();
 			} catch (BadPriceFault_Exception e) {
@@ -125,14 +134,36 @@ public class BrokerPort implements BrokerPortType{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		int x = 0;
-		
+		String company = "";
+		company = company + companyIndex;
 		transport.setDestination(destination);
 		transport.setOrigin(origin);
-		transport.setPrice(price);
+		transport.setPrice(bestPrice);
+		transport.setTransporterCompany(company);
 		transport.setId(origin+destination+price);
+		transport.setState(TransportStateView.BOOKED);
 		transports.add(transport);
+		
+			List<TransporterClient> transporters = null;
+			try {
+				transporters = listTransporterClients();
+			} catch (JAXRException e1) {
+				e1.printStackTrace();
+			}
+			for(TransporterClient client : transporters){
+				try {
+					if(transporters.indexOf(client) == companyIndex){
+						client.decideJob(origin+destination+price, true);						
+					}
+					else{
+						client.decideJob(origin+destination+price, false);
+					}
+				}
+			
+				catch (BadJobFault_Exception e) {
+					e.printStackTrace();
+				} 
+			}
 		
 		return "Transport Requested by Broker";
 	}
@@ -163,7 +194,6 @@ public class BrokerPort implements BrokerPortType{
 			 }
 			JobStateView job =	job1.getJobState();
 			if(job == null){
-				System.out.println("null......");
 				continue;
 			}
 			if (job.PROPOSED != null)
@@ -198,7 +228,6 @@ public class BrokerPort implements BrokerPortType{
 			
 		
 		
-		System.out.println("vai retornar o job com o id pedido");
 		
 		return t;
 	}
@@ -206,14 +235,12 @@ public class BrokerPort implements BrokerPortType{
 	@Override
 	public List<TransportView> listTransports() { //estava a criar um novo, nao estava a usar o global
 		
-		System.out.println("vai listar tudo");
 		return transports;
 	}
 
 	@Override
 	public void clearTransports() {
 		
-		System.out.println("vai apagar tudo");
 		
 		//estavas a chamar a funcao list, podes logo fazer clear
 		transports.clear();

@@ -23,7 +23,6 @@ public class BrokerClient implements BrokerPortType {
 
     public BrokerClient(String URL) {
 
-    	System.out.println("Setting endpoint address ...");
     	BindingProvider bindingProvider = (BindingProvider) port;
     	Map<String, Object> requestContext = bindingProvider.getRequestContext();
     	requestContext.put(ENDPOINT_ADDRESS_PROPERTY, URL);

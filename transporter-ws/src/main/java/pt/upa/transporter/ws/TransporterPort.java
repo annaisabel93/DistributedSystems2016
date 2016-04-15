@@ -48,7 +48,6 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public JobView requestJob(String origin, String destination, int price)throws BadLocationFault_Exception, BadPriceFault_Exception {
 		
-		System.out.println("Recebeu: "+origin +" " +destination );
 		JobView job = new JobView();
 	
 	
@@ -68,7 +67,7 @@ public class TransporterPort implements TransporterPortType{
 		
 		Centro.add("Lisboa");
 		Centro.add("Leiria");
-		Centro.add("Santarém");
+		Centro.add("Santarem");
 		Centro.add("Castelo Branco");
 		Centro.add("Coimbra");
 		Centro.add("Aveiro");
@@ -77,8 +76,8 @@ public class TransporterPort implements TransporterPortType{
 		Cities.add((ArrayList<String>) Centro);
 		
 		
-		Sul.add("Setúbal");
-		Sul.add("Évora");
+		Sul.add("Setubal");
+		Sul.add("Evora");
 		Sul.add("Portalegre");
 		Sul.add("Beja");
 		Sul.add("Faro");
@@ -100,7 +99,6 @@ public class TransporterPort implements TransporterPortType{
 			throw new BadLocationFault_Exception("Invalid Location", new BadLocationFault());
 			//return null;
 		}
-		System.out.println("vai fazer add-----------------------------");
 		
 		jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
 		
@@ -141,7 +139,7 @@ public class TransporterPort implements TransporterPortType{
 			}
 		}
 		
-		String id = destination+"/"+origin+"/"+price;
+		String id = origin+destination+price;
 		job.setJobIdentifier(id);
 		
 		return job;
@@ -150,7 +148,11 @@ public class TransporterPort implements TransporterPortType{
 	}
 	@Override
 	public JobView decideJob(String id, boolean accept) throws BadJobFault_Exception {
+		int x= 0;
 		JobView toReturn = null;
+		if(jobs.isEmpty()){
+			return null;
+		}
 		for(JobView job: jobs){
 			if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 				if(accept){// se aceitou
@@ -170,8 +172,9 @@ public class TransporterPort implements TransporterPortType{
 					break;
 				}
 			}
+		x++;	
 		}
-		if(toReturn == null){// se o id estiver errado
+		if(toReturn == null && x == 0){// se o id estiver errado
 			throw new BadJobFault_Exception("Wrong ID", new BadJobFault());
 		}
 		return toReturn;
@@ -181,7 +184,6 @@ public class TransporterPort implements TransporterPortType{
 	public JobView jobStatus(String id) {
 		
 		
-		System.out.println("vai ver o status");
 		List<JobView> jobList = listJobs();
 		
 		
@@ -197,11 +199,9 @@ public class TransporterPort implements TransporterPortType{
 			return null;
 		}
 		for(JobView job: jobList){
-			System.out.println("vai para for 1");
 			for(Date date : creationDates)
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 					if(job.getJobState() == JobStateView.ACCEPTED){
-						System.out.println("vai para if 2");
 						timer = new Date();
 						job.setJobState(JobStateView.HEADING);
 						if(timer.getTime() - date.getTime() > (rTime1 + rTime2)){
@@ -218,8 +218,6 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public List<JobView> listJobs() { //retorna a lista de jobs 
-		System.out.println("vai fazer o list");
-		System.out.println(jobs.isEmpty());
 		if(jobs.isEmpty() == false){
 			return jobs;
 		}
@@ -228,9 +226,7 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public void clearJobs() { //apaga todos os jobs que ja foram criados , da Lista
-		System.out.println(jobs.size());
 		jobs.clear();
-		System.out.println(jobs.size());
 		
 	}
 
