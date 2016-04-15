@@ -1,10 +1,10 @@
 package pt.upa.transporter.ws;
+import java.util.Date;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebService;
-
-import pt.upa.transporter.ws.BadPriceFault;
 
 
 
@@ -28,11 +28,16 @@ public class TransporterPort implements TransporterPortType{
 	private List<String> Norte = new ArrayList<String>();
 	private List<String> Centro = new ArrayList<String>();
 	private List<String> Sul = new ArrayList<String>();
+	private List<Date> creationDates = new ArrayList<Date>();
 	
 	private boolean isPar;
 	
 	public TransporterPort(boolean isPar){
 		this.isPar = isPar;
+	}
+	
+	public List<JobView> getJobs() {
+		return jobs;
 	}
 
 	@Override
@@ -45,7 +50,7 @@ public class TransporterPort implements TransporterPortType{
 		
 		System.out.println("Recebeu: "+origin +" " +destination );
 		JobView job = new JobView();
-		
+	
 	
 		if (price < 0) {
 			throw new BadPriceFault_Exception("Price not valid!", new BadPriceFault());
@@ -97,6 +102,11 @@ public class TransporterPort implements TransporterPortType{
 		}
 		
 		jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
+		
+		//array to keep creation date
+		Date datejob = new Date();
+		
+		creationDates.add(datejob);
 		
 		if(price <= 10){
 			job.setJobPrice(price-1);
@@ -165,9 +175,31 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public JobView jobStatus(String id) {
+		List<JobView> jobList = listJobs();
 		
+		
+		Date timer = null;
+		Random r1 = new Random();
+		Random r2 = new Random();
+		Random r3 = new Random();
+		
+		int rTime1 = r1.nextInt((5000-0)+1 +0);
+		int rTime2 = r2.nextInt((5000-0)+1 +0);
+		int rTime3 = r3.nextInt((5000-0)+1 +0);
+		
+
 		for(JobView job: jobs){
-			if(job.getJobIdentifier().equals(id)){ //percorre os jobs
+			for(Date date : creationDates)
+				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
+					if(job.getJobState() == JobStateView.ACCEPTED){
+						timer = new Date();
+						job.setJobState(JobStateView.HEADING);
+						if(timer.getTime() - date.getTime() > (rTime1 + rTime2)){
+							job.setJobState(JobStateView.ONGOING);
+							if(timer.getTime() - date.getTime() > (rTime1 + rTime2 + rTime3))
+								job.setJobState(JobStateView.COMPLETED);
+						}
+					}
 				return job;
 			}
 		}

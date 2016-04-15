@@ -8,6 +8,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import pt.upa.transporter.ws.JobStateView;
+import pt.upa.transporter.ws.cli.TransporterClient;
+
 public class BrokerPortTest {
 
 	private BrokerPort localPort;
@@ -35,7 +38,7 @@ public class BrokerPortTest {
 //		try{
 //			localPort.requestTransport("origin", "destination", 10);
 //		} catch(Exception e) {
-//			e.printStackTrace();
+//			System.out.println("EXCEPTION");;
 //		}
 //		assertNotNull(localPort.getTransports());
 //		TransportView transport = localPort.getTransports().get(0);
@@ -43,12 +46,40 @@ public class BrokerPortTest {
 //		assertEquals("destination", transport.getDestination());
 //		assertEquals(Integer.valueOf(10), transport.getPrice());
 //	}
-	
+//	
 //	@Test
 //	public void testViewTransport() {
-//		fail("Not yet implemented");
+//		TransportView transport = localPort.getTransports().get(0);
+//		String id = transport.getId();
+//
+//		TransportStateView state = transport.getState();
+//		
+//		String url = "http://localhost:8080/broker-ws/endpoint";
+//		TransporterClient client = new TransporterClient(url);
+//		JobStateView job = client.jobStatus(id).getJobState();
+//		
+//		if(job.ACCEPTED != null){
+//			assertEquals(state.BOOKED, transport.getState());
+//		}
+//			
+//		if(job.REJECTED != null){
+//			assertEquals(state.FAILED, transport.getState());
+//		}
+//		
+//		if (job.HEADING != null) {
+//			assertEquals(state.HEADING, transport.getState());
+//		}
+//		
+//		if (job.ONGOING != null) {
+//			assertEquals(state.ONGOING, transport.getState());
+//		}
+//		
+//		if (job.COMPLETED != null) {
+//			assertEquals(state.COMPLETED, transport.getState());
+//		}
+//		
 //	}
-//	
+	
 //	@Test
 //	public void testListTransports() {
 //		fail("Not yet implemented");
