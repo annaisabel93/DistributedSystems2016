@@ -97,11 +97,24 @@ public class TransporterPortTest {
 //	public void testJobStatus() {
 //		fail("Not yet implemented");
 //	}
-//	
-//	@Test
-//	public void testListJobs() {
-//		fail("Not yet implemented");
-//	}
+	
+	@Test
+	public void testListJobs() {
+		try {
+			
+			TransporterPort localPort = new TransporterPort(true);
+			assertNull(localPort.listJobs());
+
+			// E um trabalho valido, logo vai ser adicionado a lista jobs
+			JobView job = localPort.requestJob("Porto", "Lisboa", 11);
+			assertNotNull(localPort.listJobs());
+			
+		} catch (BadLocationFault_Exception e) {
+			System.out.println("[TestListJobs] Invalid location!");
+		} catch (BadPriceFault_Exception e) {
+			System.out.println("[TestListJobs] Invalid price!");
+		}
+	}
 	
 	@Test
 	public void testClearJobs() {
