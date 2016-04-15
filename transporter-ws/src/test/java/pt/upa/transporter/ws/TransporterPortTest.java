@@ -115,13 +115,12 @@ public class TransporterPortTest {
 			System.out.println("[TestListJobs] Invalid price!");
 		}
 	}
-	
+
 	@Test
 	public void testClearJobs() {
 		TransporterPort localPort = new TransporterPort(true);
 		localPort.clearJobs();
 		assertTrue(localPort.getJobs().isEmpty());
 	}
-
 	
 }

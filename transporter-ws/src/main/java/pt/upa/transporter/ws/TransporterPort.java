@@ -178,7 +178,7 @@ public class TransporterPort implements TransporterPortType{
 		List<JobView> jobList = listJobs();
 		
 		
-		Date creationDate = new Date();
+		Date timer = null;
 		Random r1 = new Random();
 		Random r2 = new Random();
 		Random r3 = new Random();
@@ -191,12 +191,15 @@ public class TransporterPort implements TransporterPortType{
 		for(JobView job: jobs){
 			for(Date date : creationDates)
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
-					if(creationDate.getTime() - date.getTime() > rTime1 && job.getJobState() == JobStateView.ACCEPTED)
+					if(job.getJobState() == JobStateView.ACCEPTED){
+						timer = new Date();
 						job.setJobState(JobStateView.HEADING);
-					if(creationDate.getTime() - date.getTime() > (rTime1 + rTime2) && job.getJobState() == JobStateView.HEADING)
-						job.setJobState(JobStateView.ONGOING);
-					if(creationDate.getTime() - date.getTime() > (rTime1 + rTime2 + rTime3) && job.getJobState() == JobStateView.ONGOING)
-						job.setJobState(JobStateView.COMPLETED);
+						if(timer.getTime() - date.getTime() > (rTime1 + rTime2)){
+							job.setJobState(JobStateView.ONGOING);
+							if(timer.getTime() - date.getTime() > (rTime1 + rTime2 + rTime3))
+								job.setJobState(JobStateView.COMPLETED);
+						}
+					}
 				return job;
 			}
 		}
