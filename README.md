@@ -1,18 +1,18 @@
 # Projeto de Sistemas Distribuídos 2015-2016 #
 
-Grupo de SD ... - Campus ...
+Grupo de SD 38 - Campus Alameda
 *(preencher com número do grupo de SD no Fénix e depois apagar esta linha)*
 
-... ... ...
+... ... ...Ana Galvão - 75312 - 
 
-... ... ...
+... ... ...Filipa Costa - 75888 - filipa.rscosta@gmail.com
 
-... ... ...
-*(preencher com nome, número e email de membro do grupo e depois apagar esta linha)*
+... ... ...Luís Santos - 75964 - lmhbs1@gmail.com
+
 
 
 Repositório:
-[tecnico-distsys/C_XX-project](https://github.com/tecnico-distsys/C_XX-project/)
+[tecnico-distsys/A_38-project](https://github.com/tecnico-distsys/A_38-project/)
 
 -------------------------------------------------------------------------------
 
@@ -23,8 +23,7 @@ Repositório:
 
 [0] Iniciar sistema operativo
 
-Indicar Windows ou Linux
-*(escolher um dos dois, que esteja disponível nos laboratórios, e depois apagar esta linha)*
+Indicar Windows
 
 
 [1] Iniciar servidores de apoio
