@@ -72,6 +72,7 @@ mvn clean install
 cd /tmp/p38/A_38-project/ 
 cd ./../transporter-ws
 mvn compile 
+mvn generate-sources
 mvn clean install
 mvn exec:java
 ```
@@ -81,7 +82,8 @@ mvn exec:java
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../transporter-ws-cli
-mvn compile 
+mvn compile
+mvn generate-sources
 mvn clean install
 mvn exec:java
 ```
@@ -98,7 +100,8 @@ mvn exec:java
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../broker-ws
-mvn compile 
+mvn compile
+mvn generate-sources
 mvn clean install
 mvn exec:java
 ```
@@ -109,7 +112,8 @@ mvn exec:java
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../broker-ws-cli
-mvn compile 
+mvn compile
+mvn generate-sources
 mvn clean install
 mvn exec:java
 ```
