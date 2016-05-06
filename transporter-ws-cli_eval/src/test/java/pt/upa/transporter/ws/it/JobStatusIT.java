@@ -69,7 +69,6 @@ public class JobStatusIT extends AbstractIT {
 	@Test
 	public void testJobStatus2() throws Exception {
 		int initialNrJobs = CLIENT.listJobs().size();
-
 		JobView jv1 = CLIENT.requestJob(CENTRO_1, SUL_1, PRICE_UPPER_LIMIT);
 		JobView jv2 = CLIENT.requestJob(CENTRO_2, SUL_2, PRICE_UPPER_LIMIT - 1);
 		jv2 = CLIENT.decideJob(jv2.getJobIdentifier(), true);
