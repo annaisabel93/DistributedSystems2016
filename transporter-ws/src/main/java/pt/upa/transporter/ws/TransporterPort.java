@@ -39,7 +39,7 @@ public class TransporterPort implements TransporterPortType{
 	}
 	
 	public List<JobView> getJobs() {
-		return jobs;
+		return this.jobs;
 	}
 
 	@Override
@@ -101,8 +101,18 @@ public class TransporterPort implements TransporterPortType{
 			throw new BadLocationFault_Exception("Invalid Location", new BadLocationFault());
 			//return null;
 		}
+		job.setJobOrigin(origin);
+		job.setJobDestination(destination);
+		job.setJobState(JobStateView.PROPOSED);
 		
-		jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
+		String id = origin+destination+price;
+		for(JobView job1: this.jobs){
+			if(job1.getJobIdentifier().equals(id)){ //percorre os jobs
+				id=id+"1";
+			}
+		}
+		job.setJobIdentifier(id);
+		this.jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
 		
 		//array to keep creation date
 		
@@ -141,10 +151,6 @@ public class TransporterPort implements TransporterPortType{
 			}
 		}
 		
-		String id = origin+destination+price;
-		job.setJobIdentifier(id);
-		//job.setJobState(JobStateView.PROPOSED);
-		//System.out.println(job.getJobState());
 		
 		return job;
 		
@@ -157,15 +163,17 @@ public class TransporterPort implements TransporterPortType{
 			throw new BadJobFault_Exception("null id", null);
 		}
 		JobView toReturn = null;
-		if(jobs.isEmpty()){
+		if(this.jobs.isEmpty()){
 			return null;
 		}
 		boolean found = false;
-		for(JobView job: jobs){
+		for(JobView job: this.jobs){
 			if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 				found = true;
 				if(job.getJobState() != null){
-					throw new BadJobFault_Exception("Already decided", null);
+					if(job.getJobState() != JobStateView.PROPOSED){
+						throw new BadJobFault_Exception("Already decided", null);
+					}
 				}
 				if(accept){// se aceitou
 					job.setJobState(JobStateView.ACCEPTED);
@@ -213,25 +221,26 @@ public class TransporterPort implements TransporterPortType{
 		if(jobList == null){
 			return null;
 		}
-		System.out.println("entra no for");
 		for(JobView job: jobList){
-			//for(Date date : creationDates)
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
-					if(job.getJobState().ACCEPTED != null){
+					if(job.getJobState() == JobStateView.ACCEPTED){
 						timer = new Date();
-						Date origin = creationDates.get(jobList.indexOf(job));
+						
+						Date origin = this.creationDates.get(jobList.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.HEADING);
+							this.creationDates.set(jobList.indexOf(job), new Date());
 						}
 					}
-					if(job.getJobState().HEADING != null){
+					if(job.getJobState() == JobStateView.HEADING){
 						timer = new Date();
 						Date origin = creationDates.get(jobList.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.ONGOING);
+							this.creationDates.set(jobList.indexOf(job), new Date());
 						}
 					}
-					if(job.getJobState().ONGOING == null){
+					if(job.getJobState() == JobStateView.ONGOING){
 						timer = new Date();
 						Date origin = creationDates.get(jobList.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
