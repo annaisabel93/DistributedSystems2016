@@ -137,7 +137,7 @@ public class BrokerPort implements BrokerPortType{
 			throw new UnavailableTransportFault_Exception("Invalid Price! high", null);
 		}
 		if(price < 0){
-			throw new UnavailableTransportPriceFault_Exception("invalid price! low", null);
+			throw new InvalidPriceFault_Exception("invalid price! low", null);
 		}
 		if(this.Sul.contains(origin) || this.Norte.contains(origin) || this.Centro.contains(origin)){
 			if(this.Sul.contains(destination) || this.Norte.contains(destination) || this.Centro.contains(destination)){
@@ -157,23 +157,31 @@ public class BrokerPort implements BrokerPortType{
 		int bestPrice = 1000;
 		int companyIndex = 0;
 		try {
+			boolean gotResponse = false;
 			List<TransporterClient> transporters = listTransporterClients();
 			for(TransporterClient client : transporters){
-			try {
-				JobView job1 = client.requestJob(origin, destination, price);
-				if(job1 != null){
-					if(bestPrice > job1.getJobPrice()){
-						bestPrice = job1.getJobPrice();
-						companyIndex = transporters.indexOf(client);						
+				try {
+					JobView job1 = client.requestJob(origin, destination, price);
+					if(job1 != null){
+						gotResponse = true;
+						if(bestPrice > job1.getJobPrice()){
+							bestPrice = job1.getJobPrice();
+							companyIndex = transporters.indexOf(client);						
+						}
 					}
 				}
-			} catch (BadLocationFault_Exception e) {
-				e.printStackTrace();
-			} catch (BadPriceFault_Exception e) {
-				e.printStackTrace();
+				catch (BadLocationFault_Exception e) {
+					e.printStackTrace();
+				}
+				catch (BadPriceFault_Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if(gotResponse == false){
+				throw new UnavailableTransportFault_Exception("did not get an offer", null);
 			}
 		}
-		} catch (JAXRException e) {
+		catch (JAXRException e) {
 			e.printStackTrace();
 		}
 		String company = "";
@@ -207,7 +215,7 @@ public class BrokerPort implements BrokerPortType{
 				} 
 			}
 		
-		return "Transport Requested by Broker";
+		return origin+destination+price;
 	}
 
 	@Override
@@ -219,6 +227,9 @@ public class BrokerPort implements BrokerPortType{
 			if (transport.getId().equals(id)) {
 				t = transport;
 			}		
+		}
+		if(t == null){
+			throw new UnknownTransportFault_Exception("ID inexistente", null);
 		}
 		
 		List<TransporterClient> clients = null;
@@ -283,8 +294,6 @@ public class BrokerPort implements BrokerPortType{
 	@Override
 	public void clearTransports() {
 		
-		
-		//estavas a chamar a funcao list, podes logo fazer clear
 		transports.clear();
 		List<TransporterClient> clients;
 		try {
