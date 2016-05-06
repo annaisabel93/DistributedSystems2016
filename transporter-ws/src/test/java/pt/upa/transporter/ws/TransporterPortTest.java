@@ -100,9 +100,8 @@ public class TransporterPortTest {
 			TransporterPort localPort = new TransporterPort(true);
 			JobView job = localPort.requestJob("Porto", "Lisboa", 11);
 			String id = job.getJobIdentifier();
-			
-			job.setJobState(JobStateView.ACCEPTED);
-			assertNotEquals(JobStateView.ACCEPTED, localPort.jobStatus(id));
+
+			assertNotEquals(JobStateView.ACCEPTED, job.getJobState());
 			
 		} catch (BadLocationFault_Exception e) {
 			System.out.println("[TestDecideJob] Invalid location!");
