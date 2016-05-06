@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 
 
@@ -17,6 +18,7 @@ import javax.jws.WebService;
     targetNamespace="http://ws.transporter.upa.pt/",
     serviceName="TransporterService"
 )
+@HandlerChain(file = "/handler-chain.xml")
 public class TransporterPort implements TransporterPortType{
 	
 	
