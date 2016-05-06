@@ -141,6 +141,8 @@ public class TransporterPort implements TransporterPortType{
 		
 		String id = origin+destination+price;
 		job.setJobIdentifier(id);
+		//job.setJobState(JobStateView.PROPOSED);
+		//System.out.println(job.getJobState());
 		
 		return job;
 		
@@ -149,12 +151,20 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public JobView decideJob(String id, boolean accept) throws BadJobFault_Exception {
 		int x= 0;
+		if(id == null){
+			throw new BadJobFault_Exception("null id", null);
+		}
 		JobView toReturn = null;
 		if(jobs.isEmpty()){
 			return null;
 		}
+		boolean found = false;
 		for(JobView job: jobs){
 			if(job.getJobIdentifier().equals(id)){ //percorre os jobs
+				found = true;
+				if(job.getJobState() != null){
+					throw new BadJobFault_Exception("Already decided", null);
+				}
 				if(accept){// se aceitou
 					job.setJobState(JobStateView.ACCEPTED);
 					toReturn = job;
@@ -173,6 +183,9 @@ public class TransporterPort implements TransporterPortType{
 				}
 			}
 		x++;	
+		}
+		if(found == false){
+			throw new BadJobFault_Exception("ID invalido", null);
 		}
 		if(toReturn == null && x == 0){// se o id estiver errado
 			throw new BadJobFault_Exception("Wrong ID", new BadJobFault());
@@ -202,21 +215,21 @@ public class TransporterPort implements TransporterPortType{
 		for(JobView job: jobList){
 			//for(Date date : creationDates)
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
-					if(job.getJobState() == JobStateView.ACCEPTED){
+					if(job.getJobState().ACCEPTED != null){
 						timer = new Date();
 						Date origin = creationDates.get(jobList.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.HEADING);
 						}
 					}
-					if(job.getJobState() == JobStateView.HEADING){
+					if(job.getJobState().HEADING != null){
 						timer = new Date();
 						Date origin = creationDates.get(jobList.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.ONGOING);
 						}
 					}
-					if(job.getJobState() == JobStateView.ONGOING){
+					if(job.getJobState().ONGOING == null){
 						timer = new Date();
 						Date origin = creationDates.get(jobList.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){

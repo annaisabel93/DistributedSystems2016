@@ -62,6 +62,7 @@ public class BrokerPort implements BrokerPortType{
 		Collection<String> urlList = listTransporters();
 		List<TransporterClient> clientList =  new ArrayList<TransporterClient>();
 		for(String url: urlList){
+			System.out.println("url->" + url);
 			clientList.add(new TransporterClient(url));
 		}
 		return clientList;

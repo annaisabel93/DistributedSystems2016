@@ -15,8 +15,8 @@ public class BrokerClientApplication {
     public static void main(String[] args) throws Exception {
         System.out.println(BrokerClientApplication.class.getSimpleName() + " starting...");
         BrokerClient client = new BrokerClient("http://localhost:8080/broker-ws/endpoint");
-        String result = client.ping("client");
-        System.out.println(result);
+        //String result = client.ping("client");
+      // System.out.println(result);
         String request = client.requestTransport("Lisboa", "Faro", 100);
         //menu para testar apenas
         while(true){

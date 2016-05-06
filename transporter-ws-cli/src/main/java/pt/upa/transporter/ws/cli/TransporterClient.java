@@ -28,6 +28,7 @@ public class TransporterClient implements TransporterPortType{
                 port = service.getTransporterPort();
 
                 System.out.println("Setting endpoint address ...");
+                System.out.println("vai aqui");
                 BindingProvider bindingProvider = (BindingProvider) port;
                 Map<String, Object> requestContext = bindingProvider.getRequestContext();
                 requestContext.put(ENDPOINT_ADDRESS_PROPERTY, URL);
