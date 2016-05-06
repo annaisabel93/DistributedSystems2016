@@ -31,14 +31,41 @@ public class BrokerPort implements BrokerPortType{
 
 	private List<TransportView> transports = new ArrayList<TransportView>();
 	private List<TransportView> proposes = new ArrayList<TransportView>();
+	private List<ArrayList<String>> Cities = new ArrayList<ArrayList<String>>();
 	private String uddiUrl;
 	private String name;
 	private String url;
+	private List<String> Norte = new ArrayList<String>();
+	private List<String> Centro = new ArrayList<String>();
+	private List<String> Sul = new ArrayList<String>();
 	
 	public BrokerPort(String uddiURL1, String name1, String url1){
 		this.uddiUrl = uddiURL1;
 		this.name = name1;
 		this.url = url1;
+		Norte.add("Porto");
+		Norte.add("Viana do Castelo");
+		Norte.add("Vila Real");
+		Norte.add("Bragança");
+		Cities.add((ArrayList<String>) Norte);
+		
+		Centro.add("Lisboa");
+		Centro.add("Leiria");
+		Centro.add("Santarem");
+		Centro.add("Castelo Branco");
+		Centro.add("Coimbra");
+		Centro.add("Aveiro");
+		Centro.add("Viseu");
+		Centro.add("Guarda");
+		Cities.add((ArrayList<String>) Centro);
+		
+		
+		Sul.add("Setubal");
+		Sul.add("Evora");
+		Sul.add("Portalegre");
+		Sul.add("Beja");
+		Sul.add("Faro");
+		Cities.add((ArrayList<String>) Sul);
 		try{
 			this.uddiNaming = new UDDINaming(uddiURL1);
 			this.uddiNaming.rebind(name, url);
@@ -106,8 +133,23 @@ public class BrokerPort implements BrokerPortType{
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
 		
-		
-		
+		if(price > 100){
+			throw new UnavailableTransportFault_Exception("Invalid Price! high", null);
+		}
+		if(price < 0){
+			throw new UnavailableTransportPriceFault_Exception("invalid price! low", null);
+		}
+		if(this.Sul.contains(origin) || this.Norte.contains(origin) || this.Centro.contains(origin)){
+			if(this.Sul.contains(destination) || this.Norte.contains(destination) || this.Centro.contains(destination)){
+				//ok
+			}
+			else{
+				throw new UnknownLocationFault_Exception("invalid destination", null);
+			}
+		}
+		else{
+			throw new UnknownLocationFault_Exception("invalid origin", null);
+		}
 		
 		TransportView transport = new TransportView();
 		List<TransporterClient> list;
@@ -132,7 +174,6 @@ public class BrokerPort implements BrokerPortType{
 			}
 		}
 		} catch (JAXRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String company = "";
