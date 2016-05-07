@@ -50,6 +50,7 @@ public class BrokerPort implements BrokerPortType{
 		Norte.add("Viana do Castelo");
 		Norte.add("Vila Real");
 		Norte.add("Bragança");
+		Norte.add("Braga");
 		Cities.add((ArrayList<String>) Norte);
 		
 		Centro.add("Lisboa");
@@ -157,10 +158,11 @@ public class BrokerPort implements BrokerPortType{
 		TransportView transport = new TransportView();
 		List<TransporterClient> list;
 		JobView job = null;
-		int bestPrice = 1000;
+		int bestPrice = price;
 		int companyIndex = 0;
 		try {
 			boolean gotResponse = false;
+			boolean betterPrice = false;
 			List<TransporterClient> transporters = listTransporterClients();
 			for(TransporterClient client : transporters){
 				try {
@@ -168,6 +170,7 @@ public class BrokerPort implements BrokerPortType{
 					if(job1 != null){
 						gotResponse = true;
 						if(bestPrice > job1.getJobPrice()){
+							betterPrice = true;
 							bestPrice = job1.getJobPrice();
 							companyIndex = transporters.indexOf(client);						
 						}
@@ -182,6 +185,9 @@ public class BrokerPort implements BrokerPortType{
 			}
 			if(gotResponse == false){
 				throw new UnavailableTransportFault_Exception("did not get an offer", null);
+			}
+			if(betterPrice == false){
+				throw new UnavailableTransportPriceFault_Exception("Oferta acima do pretendido", null);
 			}
 		}
 		catch (JAXRException e) {
@@ -225,13 +231,21 @@ public class BrokerPort implements BrokerPortType{
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
 		
 		TransportView t = null;
+		boolean match = false;
+		if(id == null){
+			throw new UnknownTransportFault_Exception("id null", null);
+		}
+		if(transports.isEmpty()){
+			throw new UnknownTransportFault_Exception("Lista vazia!", null);
+		}
 		t =  transports.get(0);
 		for (TransportView transport : transports) {
 			if (transport.getId().equals(id)) {
+				match = true;
 				t = transport;
 			}		
 		}
-		if(t == null){
+		if(match == false){
 			throw new UnknownTransportFault_Exception("ID inexistente", null);
 		}
 		
@@ -252,30 +266,31 @@ public class BrokerPort implements BrokerPortType{
 			if(job == null){
 				continue;
 			}
-			if (job.PROPOSED != null)
+			if (job1.getJobState() == JobStateView.PROPOSED){
 				return t;
+			}
 			
-			if(job.ACCEPTED != null){
+			if(job1.getJobState() == JobStateView.ACCEPTED){
 				t.setState(state.BOOKED);
 				return t;
 			}
 				
-			if(job.REJECTED != null){
+			if(job1.getJobState() == JobStateView.REJECTED){
 				t.setState(state.FAILED);
 				return t;
 			}
 			
-			if (job.HEADING != null) {
+			if (job1.getJobState() == JobStateView.HEADING) {
 				t.setState(state.HEADING);
 				return t;
 			}
 			
-			if (job.ONGOING != null) {
+			if (job1.getJobState() == JobStateView.ONGOING) {
 				t.setState(state.ONGOING);
 				return t;
 			}
 			
-			if (job.COMPLETED != null) {
+			if (job1.getJobState() == JobStateView.COMPLETED) {
 				t.setState(state.COMPLETED);
 				return t;
 			}

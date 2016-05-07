@@ -1,4 +1,4 @@
-package pt.upa.broker.ws;
+package pt.upa.transporter.ws;
 
 
 

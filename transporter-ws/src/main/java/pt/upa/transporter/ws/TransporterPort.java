@@ -113,6 +113,8 @@ public class TransporterPort implements TransporterPortType{
 		}
 		job.setJobIdentifier(id);
 		this.jobs.add(job); //caso nao haja erros, adiciona o job que iniciou ao arraylist de jobs
+		Date datejob = new Date();
+		creationDates.add(datejob);
 		
 		//array to keep creation date
 		
@@ -178,16 +180,12 @@ public class TransporterPort implements TransporterPortType{
 				if(accept){// se aceitou
 					job.setJobState(JobStateView.ACCEPTED);
 					toReturn = job;
-					Date datejob = new Date();
-					
-					creationDates.add(datejob);
+					this.creationDates.set(this.jobs.indexOf(job), new Date());
 					break;
 				}
 				else{ // se rejeitou
 					job.setJobState(JobStateView.REJECTED);
-					Date datejob = new Date();
-					
-					creationDates.add(datejob);
+					this.creationDates.set(this.jobs.indexOf(job), new Date());
 					toReturn = job;
 					break;
 				}
@@ -206,8 +204,7 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public JobView jobStatus(String id) {
 		
-		
-		List<JobView> jobList = listJobs();
+	
 		
 		
 		Date timer = null;
@@ -218,31 +215,31 @@ public class TransporterPort implements TransporterPortType{
 		int rTime1 = r1.nextInt((5000-0)+1 +0);
 		int rTime2 = r2.nextInt((5000-0)+1 +0);
 		int rTime3 = r3.nextInt((5000-0)+1 +0);
-		if(jobList == null){
+		if(this.jobs.isEmpty()){
 			return null;
 		}
-		for(JobView job: jobList){
+		for(JobView job: this.jobs){
 				if(job.getJobIdentifier().equals(id)){ //percorre os jobs
 					if(job.getJobState() == JobStateView.ACCEPTED){
 						timer = new Date();
 						
-						Date origin = this.creationDates.get(jobList.indexOf(job));
+						Date origin = this.creationDates.get(this.jobs.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.HEADING);
-							this.creationDates.set(jobList.indexOf(job), new Date());
+							this.creationDates.set(this.jobs.indexOf(job), new Date());
 						}
 					}
 					if(job.getJobState() == JobStateView.HEADING){
 						timer = new Date();
-						Date origin = creationDates.get(jobList.indexOf(job));
+						Date origin = creationDates.get(this.jobs.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.ONGOING);
-							this.creationDates.set(jobList.indexOf(job), new Date());
+							this.creationDates.set(this.jobs.indexOf(job), new Date());
 						}
 					}
 					if(job.getJobState() == JobStateView.ONGOING){
 						timer = new Date();
-						Date origin = creationDates.get(jobList.indexOf(job));
+						Date origin = creationDates.get(this.jobs.indexOf(job));
 						if((timer.getTime() - origin.getTime()) > 3000 ){
 							job.setJobState(JobStateView.COMPLETED);
 						}
@@ -264,6 +261,7 @@ public class TransporterPort implements TransporterPortType{
 	@Override
 	public void clearJobs() { //apaga todos os jobs que ja foram criados , da Lista
 		jobs.clear();
+		creationDates.clear();
 		
 	}
 
