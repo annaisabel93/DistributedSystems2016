@@ -38,9 +38,11 @@ public class BrokerPort implements BrokerPortType{
 	private String uddiUrl;
 	private String name;
 	private String url;
+	private boolean isPrimary = false;
 	private List<String> Norte = new ArrayList<String>();
 	private List<String> Centro = new ArrayList<String>();
 	private List<String> Sul = new ArrayList<String>();
+	private BrokerPort secundary;
 	
 	public BrokerPort(String uddiURL1, String name1, String url1){
 		this.uddiUrl = uddiURL1;
@@ -73,10 +75,14 @@ public class BrokerPort implements BrokerPortType{
 		try{
 			this.uddiNaming = new UDDINaming(uddiURL1);
 			this.uddiNaming.rebind(name, url);
+			if(isPrimary){
+				setSecundary();
+			}
 		}
 		catch (JAXRException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	
@@ -87,6 +93,16 @@ public class BrokerPort implements BrokerPortType{
 	
 	public List<TransportView> getTransports() {
 		return transports;
+	}
+	
+	private void setSecundary() throws JAXRException { //vai buscar o url do secundario
+		Collection<String> urlList = listBrokers();
+		List<BrokerPort> clientList =  new ArrayList<BrokerPort>();
+		for(String url: urlList){
+			if((this.url.equals(url)) == false){
+				this.secundary = new BrokerPort("http://localhost:9090", "UpaBroker2", url);
+			}
+		}
 	}
 	
 	private List<TransporterClient> listTransporterClients() throws JAXRException {
@@ -103,6 +119,14 @@ public class BrokerPort implements BrokerPortType{
 		Collection<String> urls;
 		
 		urls = uddiNaming.list("UpaTransporter%");
+		return urls;
+	}
+	
+	
+	private Collection<String> listBrokers() throws JAXRException {
+		Collection<String> urls;
+		
+		urls = uddiNaming.list("UpaBroker%");
 		return urls;
 	}
 	
@@ -321,6 +345,12 @@ public class BrokerPort implements BrokerPortType{
 		} catch (JAXRException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void addTransport(TransportView transport){
+		
+		//things
 	}
 
 }
