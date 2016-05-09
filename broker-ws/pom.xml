@@ -23,9 +23,11 @@
 
 		<mainclass>pt.upa.broker.BrokerApplication</mainclass>
 
-		<ws.url>http://localhost:8080/broker-ws/endpoint</ws.url>
+		<!-- instance number - redefine using -D option - e.g. mvn -Dws.i=2 exec:java  ||ALWAYS USE ONLY WITH i=2|| -->
+		<ws.i>8</ws.i>
+		<ws.url>http://localhost:80${ws.i}0/broker-ws/endpoint</ws.url>
 
-		<ws.name>UpaBroker</ws.name>
+		<ws.name>UpaBroker${ws.i}</ws.name>
 		<uddi.url>http://localhost:9090</uddi.url>
 	</properties>
 
