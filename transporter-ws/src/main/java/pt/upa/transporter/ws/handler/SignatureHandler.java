@@ -42,7 +42,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
  */
 
 
-public class TransporterHandler implements SOAPHandler<SOAPMessageContext>{
+public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 
 	public static final String REQUEST_PROPERTY = "my.request.property";
 	public static final String RESPONSE_PROPERTY = "my.response.property";
@@ -53,7 +53,7 @@ public class TransporterHandler implements SOAPHandler<SOAPMessageContext>{
 	public static final String RESPONSE_HEADER = "myResponseHeader";
 	public static final String RESPONSE_NS = REQUEST_NS;
 
-	public static final String CLASS_NAME = TransporterHandler.class.getSimpleName();
+	public static final String CLASS_NAME = SignatureHandler.class.getSimpleName();
 	public static final String TOKEN = "client-handler";
 
 	public boolean handleMessage(SOAPMessageContext smc) {

@@ -1,4 +1,4 @@
-package pt.upa.broker.ws.handler;
+package pt.upa.transporter.ws.handler;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -16,7 +16,7 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-
+//TODO falta fazer: quando é chamado ao enviar/receber/wtv -> se a mensagem for outbound vai ler, buscar bytes, resumir, e assinar - deve ter que ir buscar certificados!
 /**
 
  * #2 The client handler receives data from the client (via message context). #3
@@ -42,7 +42,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
  */
 
 
-public class BrokerHandler implements SOAPHandler<SOAPMessageContext>{
+public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 
 	public static final String REQUEST_PROPERTY = "my.request.property";
 	public static final String RESPONSE_PROPERTY = "my.response.property";
@@ -53,7 +53,7 @@ public class BrokerHandler implements SOAPHandler<SOAPMessageContext>{
 	public static final String RESPONSE_HEADER = "myResponseHeader";
 	public static final String RESPONSE_NS = REQUEST_NS;
 
-	public static final String CLASS_NAME = BrokerHandler.class.getSimpleName();
+	public static final String CLASS_NAME = SignatureHandler.class.getSimpleName();
 	public static final String TOKEN = "client-handler";
 
 	public boolean handleMessage(SOAPMessageContext smc) {
