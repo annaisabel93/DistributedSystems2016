@@ -17,6 +17,7 @@ import pt.upa.broker.ws.UnavailableTransportFault_Exception;
 import pt.upa.broker.ws.UnavailableTransportPriceFault_Exception;
 import pt.upa.broker.ws.UnknownLocationFault_Exception;
 import pt.upa.broker.ws.UnknownTransportFault_Exception;
+import pt.upa.broker.ws.TransportStateView;
 
 
 /**
@@ -139,6 +140,23 @@ public class BrokerClient implements BrokerPortType {
 	@Override
 	public void clearTransports() {
 		port.clearTransports();
+	}
+	
+	@Override
+	public String updateStatus(String id, TransportStateView booked) {
+		return port.updateStatus(id, booked);
+		
+	}
+
+	@Override
+	public void addTransportView(String id, String origin, String destination, Integer price, String transporterCompany, TransportStateView state) {
+		port.addTransportView(id, origin, destination, price, transporterCompany, state);
+		
+	}
+
+	@Override
+	public void updateClear(String update) {
+		port.updateClear(update);
 	}
 	
 	// main -------------------------------------------------------------------
