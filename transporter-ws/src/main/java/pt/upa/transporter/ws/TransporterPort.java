@@ -18,13 +18,10 @@ import javax.jws.WebService;
     targetNamespace="http://ws.transporter.upa.pt/",
     serviceName="TransporterService"
 )
-@HandlerChain(file = "/handler-chain.xml")
+
+//@HandlerChain(file = "/handler-chain.xml")
+
 public class TransporterPort implements TransporterPortType{
-	
-	
-	
-	
-	
 	private List<JobView> jobs = new ArrayList<JobView>();
 	private List<ArrayList<String>> Cities = new ArrayList<ArrayList<String>>();
 	private List<String> Norte = new ArrayList<String>();
