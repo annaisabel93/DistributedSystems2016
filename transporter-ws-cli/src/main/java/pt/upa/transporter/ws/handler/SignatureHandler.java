@@ -130,13 +130,6 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 			} 
 			
 			
-			
-//			MessageContext message = new XMLMessage();
-//			message.processReceivedData(request);
-//			
-//			MessageContext clientMessage = new EncryptedXMLMessage(csKey);
-//			clientMessage.processReceivedData(DataConvertor.getBytesFromBase64String(message.getElement(TOKEN)));
-			
 			// put token in request SOAP header
 			try {
 				// get SOAP envelope
