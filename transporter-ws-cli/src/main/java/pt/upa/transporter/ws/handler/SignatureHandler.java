@@ -1,9 +1,31 @@
 package pt.upa.transporter.ws.handler;
 
+//provides helper methods to print byte[]
+import static javax.xml.bind.DatatypeConverter.printHexBinary;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyStore;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -11,27 +33,19 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-//provides helper methods to print byte[]
-import static javax.xml.bind.DatatypeConverter.printHexBinary;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.util.Collection;
+import javax.xml.bind.DatatypeConverter;
 
 //TODO falta fazer: quando é chamado ao enviar/receber/wtv -> se a mensagem for outbound vai ler, buscar bytes, resumir, e assinar - deve ter que ir buscar certificados!
 /*
@@ -61,6 +75,37 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 	public static final String CLASS_NAME = SignatureHandler.class.getSimpleName();
 	public static final String TOKEN = "client-handler";
 
+	private static byte[] SOAPMessageToByteArray(SOAPMessage msg) throws Exception {
+
+        ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+        byte[] msgByteArray = null;
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+
+        Source source = msg.getSOAPPart().getContent();
+        Result result = new StreamResult(byteOutStream);
+        transformer.transform(source, result);
+
+        msgByteArray = byteOutStream.toByteArray();
+        return msgByteArray;
+    }
+
+	private String SOAPMessageToString(SOAPMessage msg) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		try {
+			msg.writeTo(stream);
+		} catch (SOAPException | IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			return new String(stream.toByteArray(), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} 
+		return null;
+	}
+	
 	public boolean handleMessage(SOAPMessageContext smc) {
 		Boolean outbound = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 		if (outbound) {
@@ -71,6 +116,27 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 			String propertyValue = (String) smc.get(REQUEST_PROPERTY);
 			System.out.printf("%s received '%s'%n", CLASS_NAME, propertyValue);
 
+			SOAPMessage soapMsg = smc.getMessage();
+			SOAPBody el;
+			try {
+				el = soapMsg.getSOAPBody();
+				DOMSource source = new DOMSource(el);
+				StringWriter stringResult = new StringWriter();
+				TransformerFactory.newInstance().newTransformer().transform(source, new StreamResult(stringResult));
+				String message = stringResult.toString();
+				DatatypeConverter.parseBase64Binary(message);
+			} catch (SOAPException | TransformerException | TransformerFactoryConfigurationError e1) {
+				e1.printStackTrace();
+			} 
+			
+			
+			
+//			MessageContext message = new XMLMessage();
+//			message.processReceivedData(request);
+//			
+//			MessageContext clientMessage = new EncryptedXMLMessage(csKey);
+//			clientMessage.processReceivedData(DataConvertor.getBytesFromBase64String(message.getElement(TOKEN)));
+			
 			// put token in request SOAP header
 			try {
 				// get SOAP envelope
