@@ -44,7 +44,7 @@ public class BrokerPort implements BrokerPortType{
 	private List<String> Norte = new ArrayList<String>();
 	private List<String> Centro = new ArrayList<String>();
 	private List<String> Sul = new ArrayList<String>();
-	private BrokerClient secundary;
+	private BrokerClient secondary = null;
 	
 	public BrokerPort(String uddiURL1, String name1, String url1, boolean Is_secundary){
 		this.uddiUrl = uddiURL1;
@@ -101,7 +101,7 @@ public class BrokerPort implements BrokerPortType{
 	}
 	
 	private void setSecundary() throws JAXRException { //vai buscar o url do secundario
-				this.secundary = new BrokerClient("http://localhost:8020/broker-ws/endpoint");
+				this.secondary = new BrokerClient("http://localhost:8020/broker-ws/endpoint");
 				System.out.println("ja fez o teste");
 				return;
 	}
@@ -227,6 +227,7 @@ public class BrokerPort implements BrokerPortType{
 		transport.setId(origin+destination+price);
 		transport.setState(TransportStateView.BOOKED);
 		transports.add(transport);
+		secondary.addTransportView(origin+destination+price, origin, destination, bestPrice, company, TransportStateView.BOOKED);
 		
 			List<TransporterClient> transporters = null;
 			try {
@@ -297,26 +298,31 @@ public class BrokerPort implements BrokerPortType{
 			
 			if(job1.getJobState() == JobStateView.ACCEPTED){
 				t.setState(state.BOOKED);
+				secondary.updateStatus(id, TransportStateView.BOOKED);
 				return t;
 			}
 				
 			if(job1.getJobState() == JobStateView.REJECTED){
 				t.setState(state.FAILED);
+				secondary.updateStatus(id, TransportStateView.FAILED);
 				return t;
 			}
 			
 			if (job1.getJobState() == JobStateView.HEADING) {
 				t.setState(state.HEADING);
+				secondary.updateStatus(id, TransportStateView.HEADING);
 				return t;
 			}
 			
 			if (job1.getJobState() == JobStateView.ONGOING) {
 				t.setState(state.ONGOING);
+				secondary.updateStatus(id, TransportStateView.ONGOING);
 				return t;
 			}
 			
 			if (job1.getJobState() == JobStateView.COMPLETED) {
 				t.setState(state.COMPLETED);
+				secondary.updateStatus(id, TransportStateView.COMPLETED);
 				return t;
 			}
 		}
@@ -338,6 +344,7 @@ public class BrokerPort implements BrokerPortType{
 	public void clearTransports() {
 		
 		transports.clear();
+		secondary.updateClear("do");
 		List<TransporterClient> clients;
 		try {
 			clients = listTransporterClients();
@@ -348,10 +355,35 @@ public class BrokerPort implements BrokerPortType{
 		}
 	}
 	
-	
-	public void addTransport(TransportView transport){
+	@Override
+	public void addTransportView(String id, String origin, String destination, Integer price, String transporterCompany, TransportStateView state){
 		
-		//things
+		TransportView t = new TransportView();
+		t.setId(id);
+		t.setDestination(destination);
+		t.setOrigin(origin);
+		t.setPrice(price);
+		t.setTransporterCompany(transporterCompany);
+		t.setState(state);
+		this.transports.add(t);
 	}
+	@Override
+	public void updateClear(String error){ //should not receive string, but I have no ideia where to change
+		transports.clear();
+	}
+	
+	@Override
+	public String updateStatus(String id, TransportStateView state){
+		TransportView t = null;
+		for (TransportView transport : this.transports) {
+			if (transport.getId().equals(id)) {
+				t = transport;
+				t.setState(state);
+			}		
+		}
+		return "done";
+	}
+	
+	
 
 }
