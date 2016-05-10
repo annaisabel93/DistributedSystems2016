@@ -257,8 +257,8 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 		System.out.println(printHexBinary(digest));
 	}
 
-	final static String CERTIFICATE_FILE = "example.cer";
-	final static String KEYSTORE_FILE = "keystore.jks";
+	final static String CERTIFICATE_FILE = "UpaTransporter2.cer";
+	final static String KEYSTORE_FILE = "UpaTransporter2.jks";
 	final static String KEYSTORE_PASSWORD = "1nsecure";
 	final static String KEY_ALIAS = "example";
 	final static String KEY_PASSWORD = "ins3cur3";
