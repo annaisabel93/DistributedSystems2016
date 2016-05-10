@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 
 import pt.upa.broker.BrokerApplication;
 import pt.upa.broker.ws.BrokerPort;
+import pt.upa.broker.ws.cli.BrokerClient;
 
 public class BrokerApplication {
 
@@ -41,18 +42,46 @@ public class BrokerApplication {
 		String uddiURL = args[0];
 		String name = args[1];
 		String url = args[2];
+		
+		boolean secundary = false;
+		
+		int instance = Integer.parseInt(args[3]);
+		if(instance == 2){
+			secundary = true;
+		}
 
 		Endpoint endpoint = null;
 		UDDINaming uddiNaming = null;try
 
 		{
-			BrokerPort port = new BrokerPort(uddiURL, name, url);
+			BrokerPort port = new BrokerPort(uddiURL, name, url, secundary);
 			endpoint = Endpoint.create(port);
 
 			// publish endpoint
 			System.out.printf("Starting %s%n", url);
 			endpoint.publish(url);
 
+			System.out.println(secundary);
+			Thread.sleep(1000);
+			boolean isAlive = true;
+			boolean wasBorn = false;
+			if (secundary == true){
+				while(isAlive == true){
+					Thread.sleep(5000);
+						try{
+							System.out.println("Vai fazer o try");
+							BrokerClient client = new BrokerClient("http://localhost:8080/broker-ws/endpoint");
+							client.ping("teste");
+							wasBorn = true;
+						}
+						catch( Exception e){
+							if(wasBorn == true){
+								isAlive = false;
+							}
+						}
+				}
+			}
+			
 			// publish to UDDI
 			System.out.printf("Publishing '%s' to UDDI at %s%n", name, uddiURL);
 			uddiNaming = new UDDINaming(uddiURL);

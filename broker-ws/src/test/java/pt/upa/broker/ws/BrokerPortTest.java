@@ -25,7 +25,7 @@ public class BrokerPortTest {
 
 	@Before
 	public void setUp() throws Exception {
-		localPort = new BrokerPort("http://localhost:9090", "UpaBroker", "http://localhost:8080/broker-ws/endpoint");
+		localPort = new BrokerPort("http://localhost:9090", "UpaBroker", "http://localhost:8080/broker-ws/endpoint", false);
 	}
 
 	@After

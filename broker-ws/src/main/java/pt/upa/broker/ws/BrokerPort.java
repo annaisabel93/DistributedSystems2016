@@ -8,12 +8,14 @@ import javax.jws.WebService;
 import javax.xml.registry.JAXRException;
 
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
+
 import pt.upa.transporter.ws.BadJobFault_Exception;
 import pt.upa.transporter.ws.BadLocationFault_Exception;
 import pt.upa.transporter.ws.BadPriceFault_Exception;
 import pt.upa.transporter.ws.JobStateView;
 import pt.upa.transporter.ws.JobView;
 import pt.upa.transporter.ws.cli.TransporterClient;
+import pt.upa.broker.ws.cli.BrokerClient;
 
 @WebService(
     endpointInterface="pt.upa.broker.ws.BrokerPortType",
@@ -38,16 +40,17 @@ public class BrokerPort implements BrokerPortType{
 	private String uddiUrl;
 	private String name;
 	private String url;
-	private boolean isPrimary = false;
+	private boolean isSecundary = false;
 	private List<String> Norte = new ArrayList<String>();
 	private List<String> Centro = new ArrayList<String>();
 	private List<String> Sul = new ArrayList<String>();
-	private BrokerPort secundary;
+	private BrokerClient secundary;
 	
-	public BrokerPort(String uddiURL1, String name1, String url1){
+	public BrokerPort(String uddiURL1, String name1, String url1, boolean Is_secundary){
 		this.uddiUrl = uddiURL1;
 		this.name = name1;
 		this.url = url1;
+		this.isSecundary = Is_secundary;
 		Norte.add("Porto");
 		Norte.add("Viana do Castelo");
 		Norte.add("Vila Real");
@@ -75,7 +78,9 @@ public class BrokerPort implements BrokerPortType{
 		try{
 			this.uddiNaming = new UDDINaming(uddiURL1);
 			this.uddiNaming.rebind(name, url);
-			if(isPrimary){
+			System.out.println("vai ver se e primario");
+			if(isSecundary == false){
+				System.out.println("e primario, vai fazer set secundary");
 				setSecundary();
 			}
 		}
@@ -96,13 +101,9 @@ public class BrokerPort implements BrokerPortType{
 	}
 	
 	private void setSecundary() throws JAXRException { //vai buscar o url do secundario
-		Collection<String> urlList = listBrokers();
-		List<BrokerPort> clientList =  new ArrayList<BrokerPort>();
-		for(String url: urlList){
-			if((this.url.equals(url)) == false){
-				this.secundary = new BrokerPort("http://localhost:9090", "UpaBroker2", url);
-			}
-		}
+				this.secundary = new BrokerClient("http://localhost:8020/broker-ws/endpoint");
+				System.out.println("ja fez o teste");
+				return;
 	}
 	
 	private List<TransporterClient> listTransporterClients() throws JAXRException {
@@ -135,7 +136,7 @@ public class BrokerPort implements BrokerPortType{
 		Collection<String> urls = null;
 		List<TransporterClient> clientList = null;
 		String pings = "Broker responding to: " + name;
-		System.out.println(pings);
+		//System.out.println(pings);
 		try {
 			clientList = listTransporterClients();
 			urls = listTransporters();
