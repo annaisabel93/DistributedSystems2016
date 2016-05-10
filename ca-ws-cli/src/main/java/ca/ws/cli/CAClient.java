@@ -47,7 +47,7 @@ public class CAClient {
 		requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
 
 		System.out.println("Remote call ...");
-		String result = port.sayHello("friend");
+		byte[] result = port.getCertificate();
 		System.out.println(result);
 	}
 
