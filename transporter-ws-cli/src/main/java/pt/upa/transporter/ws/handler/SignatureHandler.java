@@ -2,7 +2,6 @@ package pt.upa.transporter.ws.handler;
 
 //provides helper methods to print byte[]
 import static javax.xml.bind.DatatypeConverter.printHexBinary;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -22,7 +21,6 @@ import java.security.cert.CertificateFactory;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
@@ -47,10 +45,13 @@ import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.bind.DatatypeConverter;
 
+import pt.upa.ca.ws.cli.*;
+
+
 //TODO falta fazer: quando é chamado ao enviar/receber/wtv -> se a mensagem for outbound vai ler, buscar bytes, resumir, e assinar - deve ter que ir buscar certificados!
 /*
  * #2 The client handler receives data from the client (via message context). #3
- * The client handler passes data to the server handler (via outbound SOAP
+ * The client handler .passes data to the server handler (via outbound SOAP
  * message header).
  *
  *
@@ -255,10 +256,12 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 	final static String KEYSTORE_PASSWORD = "1nsecure";
 	final static String KEY_ALIAS = "example";
 	final static String KEY_PASSWORD = "ins3cur3";
+	final static String ca = "CA";
 
 	public static void sign(String[] args) throws Exception {
 		// check arguments and get plain-text
-
+		CAClient client = new CAClient("http://localhost:8086/ca-ws/endpoint", ca);
+		
 		if (args.length != 1) {
 
 			System.err.println("args: (text)");
@@ -284,104 +287,8 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 		System.out.println("Signature Bytes:");
 		System.out.println(printHexBinary(digitalSignature));
 
-		Certificate certificate = readCertificateFile(CERTIFICATE_FILE);
-		PublicKey publicKey = certificate.getPublicKey();
-
-		// verify the signature
-		System.out.println("Verifying ...");
-		boolean isValid = verifyDigitalSignature(digitalSignature, plainBytes, publicKey);
-
-		if (isValid) {
-			System.out.println("The digital signature is valid");
-		} else {
-			System.out.println("The digital signature is NOT valid");
-		}
-
-		// data modification ...
-		plainBytes[3] = 12;
-		System.out.println("Tampered bytes: (look closely around the 7th hex character)");
-		System.out.println(printHexBinary(plainBytes));
-
-		// again verify the signature
-		System.out.println("Verifying again ...");
-		isValid = verifyDigitalSignature(digitalSignature, plainBytes, publicKey);
-
-		if (isValid) {
-			System.out.println("The digital signature is valid");
-
-		} else {
-			System.out.println("The digital signature is NOT valid");
-		}
 	}
 
-	/**
-	 * Returns the public key from a certificate
-	 * 
-	 * @param certificate
-	 * @return
-	 */
-
-	public static PublicKey getPublicKeyFromCertificate(Certificate certificate) {
-		return certificate.getPublicKey();
-	}
-
-	/**
-	 * Reads a certificate from a file
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-
-	public static Certificate readCertificateFile(String certificateFilePath) throws Exception {
-
-		FileInputStream fis;
-
-		try {
-			fis = new FileInputStream(certificateFilePath);
-		} catch (FileNotFoundException e) {
-			System.err.println("Certificate file <" + certificateFilePath + "> not fount.");
-			return null;
-		}
-
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		CertificateFactory cf = CertificateFactory.getInstance("X.509");
-		
-		if (bis.available() > 0) {
-			Certificate cert = cf.generateCertificate(bis);
-			return cert;
-			// It is possible to print the content of the certificate file:
-			// System.out.println(cert.toString());
-		}
-
-		bis.close();
-		fis.close();
-
-		return null;
-	}
-	
-	/**
-	 * Reads a collections of certificates from a file
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-
-	public static Collection<Certificate> readCertificateList(String certificateFilePath) throws Exception {
-		FileInputStream fis;
-
-		try {
-			fis = new FileInputStream(certificateFilePath);
-		} catch (FileNotFoundException e) {
-			System.err.println("Certificate file <" + certificateFilePath + "> not fount.");
-			return null;
-		}
-
-		CertificateFactory cf = CertificateFactory.getInstance("X.509");
-		@SuppressWarnings("unchecked")
-		Collection<Certificate> c = (Collection<Certificate>) cf.generateCertificates(fis);
-		fis.close();
-		return c;
-	}
 
 	/**
 	 * Reads a PrivateKey from a key-store

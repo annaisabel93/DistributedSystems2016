@@ -1,4 +1,4 @@
-package ca.ws;
+package pt.upa.ca.ws;
 
 import javax.xml.ws.Endpoint;
 
