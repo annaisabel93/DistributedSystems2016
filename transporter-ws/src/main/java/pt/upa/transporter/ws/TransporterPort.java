@@ -18,7 +18,7 @@ import javax.jws.WebService;
     targetNamespace="http://ws.transporter.upa.pt/",
     serviceName="TransporterService"
 )
-@HandlerChain(file = "/handler-chain.xml")
+//@HandlerChain(file = "/handler-chain.xml")
 public class TransporterPort implements TransporterPortType{
 	
 	
