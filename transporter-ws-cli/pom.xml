@@ -55,7 +55,6 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		
 		<dependency>
 			<groupId>pt.upa.a38</groupId>
 			<artifactId>ca-ws-cli</artifactId>

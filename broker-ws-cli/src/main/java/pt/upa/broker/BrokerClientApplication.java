@@ -35,10 +35,15 @@ public class BrokerClientApplication {
 	            	origin = br.readLine();
 	            	System.out.println("destiny?");
 	            	destiny = br.readLine();
-	            	client.requestTransport(origin, destiny, 80);
+	            	System.out.println("price?");
+	            	String price_string = br.readLine();
+	            	int price = Integer.parseInt(price_string);
+	            	client.requestTransport(origin, destiny, price);
 	            }
 	            if(s.equals("ping")){
-	            	client.ping("client");
+	            	System.out.println("what do you want to send?");
+	            	String ping_content = br.readLine();
+	            	client.ping(ping_content);
 	            }
 	            if(s.equals("status")){
 	            	System.out.println("id do job?");

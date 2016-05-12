@@ -7,6 +7,8 @@ import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import javax.xml.registry.JAXRException;
 
+//import org.apache.juddi.v3.client.transport.Transport;
+
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 
 import pt.upa.transporter.ws.BadJobFault_Exception;
@@ -227,11 +229,17 @@ public class BrokerPort implements BrokerPortType{
 		transport.setOrigin(origin);
 		transport.setPrice(bestPrice);
 		transport.setTransporterCompany(company);
-		transport.setId(origin+destination+price);
+		String id = origin+destination+price;
+		for(TransportView view : this.transports){
+			if(view.getId().equals(id)){
+				id= id + 1;
+			}
+		}
+		transport.setId(id);
 		transport.setState(TransportStateView.BOOKED);
 		transports.add(transport);
 		if(isSecundary == false){
-			secondary.addTransportView(origin+destination+price, origin, destination, bestPrice, company, TransportStateView.BOOKED);
+			secondary.addTransportView(id, origin, destination, bestPrice, company, TransportStateView.BOOKED);
 		}
 		
 			List<TransporterClient> transporters = null;
@@ -254,7 +262,7 @@ public class BrokerPort implements BrokerPortType{
 					e.printStackTrace();
 				} 
 			}
-		
+
 		return origin+destination+price;
 	}
 
