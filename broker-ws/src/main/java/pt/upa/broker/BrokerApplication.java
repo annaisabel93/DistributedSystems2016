@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Endpoint;
+import javax.xml.ws.WebServiceException;
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 
 import pt.upa.broker.BrokerApplication;
@@ -74,7 +75,7 @@ public class BrokerApplication {
 							client.ping("teste");
 							wasBorn = true;
 						}
-						catch( Exception e){
+						catch( WebServiceException e){
 							System.out.println("caught exception");
 							if(wasBorn == true){
 								isAlive = false;
@@ -98,6 +99,7 @@ public class BrokerApplication {
 			
 			
 			// publish to UDDI
+			Thread.sleep(1000);
 			System.out.printf("Publishing '%s' to UDDI at %s%n", name, uddiURL);
 			uddiNaming = new UDDINaming(uddiURL);
 			//String teste = "http://localhost:8080/broker-ws/endpoint";
