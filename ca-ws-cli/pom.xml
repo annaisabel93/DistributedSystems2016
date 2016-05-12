@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- http://maven.apache.org/pom.html#Quick_Overview -->
 
-    <groupId>example</groupId>
+    <groupId>pt.upa.a38</groupId>
     <artifactId>ca-ws-cli</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -31,7 +31,7 @@
         <ws.url>http://localhost:8086/ca-ws/endpoint</ws.url>
         <wsdl.url>${ws.url}?WSDL</wsdl.url>
 
-        <mainclass>ca.ws.cli.CAClient</mainclass>
+        <mainclass>pt.upa.ca.ws.cli.CAClient</mainclass>
 
         <uddi.url>http://localhost:9090</uddi.url>
         <ws.name>ca</ws.name>

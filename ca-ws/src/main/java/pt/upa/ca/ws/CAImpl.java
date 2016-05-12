@@ -1,4 +1,4 @@
-package ca.ws;
+package pt.upa.ca.ws;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 
 import javax.jws.WebService;
 
-@WebService(endpointInterface = "ca.ws.CA")
+@WebService(endpointInterface = "pt.upa.ca.ws.CA")
 public class CAImpl implements CA {	
 	public byte[] getCertificate(){
 		byte[] read = null;
