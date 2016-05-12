@@ -13,6 +13,7 @@ import pt.upa.broker.ws.BrokerPortType;
 import pt.upa.broker.ws.BrokerService;
 import pt.upa.broker.ws.InvalidPriceFault_Exception;
 import pt.upa.broker.ws.TransportView;
+import javax.xml.ws.WebServiceException;
 import pt.upa.broker.ws.UnavailableTransportFault_Exception;
 import pt.upa.broker.ws.UnavailableTransportPriceFault_Exception;
 import pt.upa.broker.ws.UnknownLocationFault_Exception;
@@ -124,27 +125,77 @@ public class BrokerClient implements BrokerPortType {
 	public String requestTransport(String origin, String destination, int price)
 			throws InvalidPriceFault_Exception, UnavailableTransportFault_Exception,
 			UnavailableTransportPriceFault_Exception, UnknownLocationFault_Exception {
-		return port.requestTransport(origin, destination, price);
+		try{
+			return port.requestTransport(origin, destination, price);
+		}
+		catch(WebServiceException e){
+				try {
+					Thread.sleep(6000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				return port.requestTransport(origin, destination, price);
+		}	
 	}
 
 	@Override
 	public TransportView viewTransport(String id) throws UnknownTransportFault_Exception {
-		return port.viewTransport(id);
+		try{
+			return port.viewTransport(id);
+		}
+		catch(WebServiceException e){
+				try {
+					Thread.sleep(6000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				return port.viewTransport(id);
+		}
 	}
 
 	@Override
 	public List<TransportView> listTransports() {
-		return port.listTransports();
+		try{
+			return port.listTransports();
+		}
+		catch(WebServiceException e){
+				try {
+					Thread.sleep(6000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				return port.listTransports();
+		}
 	}
 
 	@Override
 	public void clearTransports() {
-		port.clearTransports();
+		try{
+			port.clearTransports();
+		}
+		catch(WebServiceException e){
+				try {
+					Thread.sleep(6000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				port.clearTransports();
+		}
 	}
 	
 	@Override
 	public String updateStatus(String id, TransportStateView booked) {
-		return port.updateStatus(id, booked);
+		try{
+			return port.updateStatus(id, booked);
+		}
+		catch(WebServiceException e){
+				try {
+					Thread.sleep(6000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				return port.updateStatus(id, booked);
+		}
 		
 	}
 

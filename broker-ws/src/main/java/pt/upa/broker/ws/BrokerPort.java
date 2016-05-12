@@ -133,6 +133,9 @@ public class BrokerPort implements BrokerPortType{
 	
 	@Override
 	public String ping(String name){
+		if(name.equals("exit")){
+			System.exit(0);
+		}
 		Collection<String> urls = null;
 		List<TransporterClient> clientList = null;
 		String pings = "Broker responding to: " + name;
