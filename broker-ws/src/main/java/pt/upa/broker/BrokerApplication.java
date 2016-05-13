@@ -63,7 +63,7 @@ public class BrokerApplication {
 			System.out.printf("Starting %s%n", url);
 			endpoint.publish(url);
 
-			System.out.println(secundary);
+			System.out.println("Primary Broker can now be started!");
 			Thread.sleep(1000);
 			boolean isAlive = true;
 			boolean wasBorn = false;
@@ -76,7 +76,6 @@ public class BrokerApplication {
 							wasBorn = true;
 						}
 						catch( WebServiceException e){
-							System.out.println("caught exception");
 							if(wasBorn == true){
 								isAlive = false;
 							}

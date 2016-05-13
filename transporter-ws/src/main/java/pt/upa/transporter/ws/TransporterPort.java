@@ -44,6 +44,7 @@ public class TransporterPort implements TransporterPortType{
 
 	@Override
 	public JobView requestJob(String origin, String destination, int price)throws BadLocationFault_Exception, BadPriceFault_Exception {
+		System.out.println("Received request for: "+origin+"-"+destination+"-"+price);
 		
 		JobView job = new JobView();
 	
@@ -155,6 +156,7 @@ public class TransporterPort implements TransporterPortType{
 	}
 	@Override
 	public JobView decideJob(String id, boolean accept) throws BadJobFault_Exception {
+		System.out.println("Deciding: "+id);
 		int x= 0;
 		if(id == null){
 			throw new BadJobFault_Exception("null id", null);
