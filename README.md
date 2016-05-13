@@ -45,7 +45,7 @@ mkdir /tmp/p38
 [3] Obter código fonte do projeto (versão entregue)
 
 ```
-git clone --branch SD_R1 https://github.com/tecnico-distsys/A_38-project.git
+git clone --branch SD_R2 https://github.com/tecnico-distsys/A_38-project.git
 ```
 
 
@@ -66,26 +66,55 @@ mvn clean install
 
 ### Serviço TRANSPORTER
 
-[1] Construir e executar **servidor**
+[1] Construir e executar **servidor CA**
+
+```
+cd /tmp/p38/A_38-project/ 
+cd ./../ca-ws
+mvn clean package
+mvn clean install
+mvn exec:java
+```
+
+
+
+[2] Construir e executar **servidor**
 
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../transporter-ws
-mvn compile 
-mvn generate-sources
+mvn clean package
 mvn clean install
-mvn exec:java
+mvn -Dws.i=2 exec:java  (repetir para i=1 , servidor impar)
 ```
 
-[2] Construir **cliente** e executar testes
+[3] Construir **cliente** e executar testes
 
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../transporter-ws-cli
-mvn compile
-mvn generate-sources
+mvn clean package
 mvn clean install
-mvn exec:java
+```
+
+
+[4] Construir **cliente CA** e executar testes
+
+```
+cd /tmp/p38/A_38-project/ 
+cd ./../ca-ws-cli
+mvn clean package
+mvn clean install
+```
+
+[5] Correr testes fornecidos pelo docente ao TRANSPORTER
+
+```
+cd /tmp/p38/A_38-project/ 
+cd ./../ca-ws-cli_eval
+mvn clean package
+mvn clean install
+mvn verify
 ```
 
 ...
@@ -95,25 +124,46 @@ mvn exec:java
 
 ### Serviço BROKER
 
-[1] Construir e executar **servidor**
+[1] Construir e executar **servidor Secundario**
 
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../broker-ws
-mvn compile
-mvn generate-sources
+mvn clean package
 mvn clean install
-mvn exec:java
+mvn -Dws.i=2 exec:java 
+```
+
+[2] Construir e executar **servidor Primario **
+
+```
+aguardar ate ser impresso, no secundario, o aviso de que o mesmo esta pronto
+cd /tmp/p38/A_38-project/ 
+cd ./../broker-ws
+mvn clean package
+mvn clean install
+mvn exec:java 
+```
+
+[3] Construir e executar testes ao Broker fornecidos pelo docente
+
+```
+cd /tmp/p38/A_38-project/ 
+cd ./../broker-ws-cli_eval
+mvn clean package
+mvn clean install
+mvn verify
 ```
 
 
-[2] Construir **cliente** e executar testes
+
+
+[2] Construir **cliente** e executar testes (inclui shell para testar "manualmente")
 
 ```
 cd /tmp/p38/A_38-project/ 
 cd ./../broker-ws-cli
-mvn compile
-mvn generate-sources
+mvn clean package
 mvn clean install
 mvn exec:java
 ```
