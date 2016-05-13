@@ -75,9 +75,7 @@ public class BrokerPort implements BrokerPortType{
 		try{
 			this.uddiNaming = new UDDINaming(uddiURL1);
 			this.uddiNaming.rebind(name, url);
-			System.out.println("vai ver se e primario");
 			if(isSecundary == false){
-				System.out.println("e primario, vai fazer set secundary");
 				setSecundary();
 			}
 		}
@@ -99,7 +97,6 @@ public class BrokerPort implements BrokerPortType{
 	
 	private void setSecundary() throws JAXRException { //vai buscar o url do secundario
 				this.secondary = new BrokerClient("http://localhost:8020/broker-ws/endpoint");
-				System.out.println("ja fez o teste");
 				return;
 	}
 	
@@ -202,10 +199,10 @@ public class BrokerPort implements BrokerPortType{
 					}
 				}
 				catch (BadLocationFault_Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				catch (BadPriceFault_Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			if(gotResponse == false){
@@ -246,16 +243,16 @@ public class BrokerPort implements BrokerPortType{
 			for(TransporterClient client : transporters){
 				try {
 					if(transporters.indexOf(client) == companyIndex){
-						client.decideJob(origin+destination+price, true);						
+						client.decideJob(id, true);						
 					}
 					else{
-						client.decideJob(origin+destination+price, false);
+						client.decideJob(id, false);
 					}
 				}
 			
 				catch (BadJobFault_Exception e) {
-					e.printStackTrace();
-				} 
+					//e.printStackTrace();
+				}
 			}
 
 		return origin+destination+price;
