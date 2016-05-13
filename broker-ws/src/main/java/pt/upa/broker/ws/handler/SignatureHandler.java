@@ -43,18 +43,19 @@ import org.w3c.dom.Document;
 
 import pt.upa.ca.ws.CA;
 import pt.upa.ca.ws.cli.CAClient;
+import pt.upa.ca.ws.cli.CAClientException;
 import pt.upa.ca.ws.CAImplService;
 import pt.upa.ca.ws.*;
 
 public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 	
 	public static final String CONTEXT_PROPERTY = "my.property";
-	final static String CERTIFICATE_FILE = "src/main/resources/UpaTransporter1.cer";
+	public String CERTIFICATE_FILE; //should be CAClient and pick up certificate
+	
 	final static String KEYSTORE_FILE = "src/main/resources/UpaTransporter1.jks";
 	final static String KEYSTORE_PASSWORD = "ins3cur3";
 	final static String KEY_ALIAS = "UpaTransporter1";
 	final static String KEY_PASSWORD = "1nsecure";
-	
 	//
 	// Handler interface methods
 	//
@@ -64,7 +65,15 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 
 
 	public boolean handleMessage(SOAPMessageContext smc) {
+		
 
+		try {
+			CAClient cc = new CAClient("http://localhost:8086/ca-ws/endpoint");
+			CERTIFICATE_FILE = cc.getCertificateFromCA().toString();
+		} catch (CAClientException e1) {
+			e1.printStackTrace();
+		}
+		
 		System.out.println("AddHeaderHandler: Handling message.");
 		Boolean outboundElement = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
@@ -72,7 +81,7 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 
 			if (outboundElement.booleanValue()) {
 				System.out.println("Writing header in outbound SOAP message...");
-
+				
 				// get SOAP envelope
 				SOAPMessage msg = smc.getMessage();
 				SOAPPart sp = msg.getSOAPPart();
@@ -284,6 +293,8 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext>{
 	 */
 
 	public static Certificate readCertificateFile(String certificateFilePath) throws Exception {
+		
+	
 		FileInputStream fis;
 
 		try {
