@@ -224,11 +224,17 @@ public class BrokerPort implements BrokerPortType{
 		transport.setOrigin(origin);
 		transport.setPrice(bestPrice);
 		transport.setTransporterCompany(company);
-		transport.setId(origin+destination+price);
+		String id = origin+destination+price;
+		for(TransportView view : this.transports){
+			if(view.getId().equals(id)){
+				id= id + 1;
+			}
+		}
+		transport.setId(id);
 		transport.setState(TransportStateView.BOOKED);
 		transports.add(transport);
 		if(isSecundary == false){
-			secondary.addTransportView(origin+destination+price, origin, destination, bestPrice, company, TransportStateView.BOOKED);
+			secondary.addTransportView(id, origin, destination, bestPrice, company, TransportStateView.BOOKED);
 		}
 		
 			List<TransporterClient> transporters = null;
@@ -251,7 +257,7 @@ public class BrokerPort implements BrokerPortType{
 					e.printStackTrace();
 				} 
 			}
-		
+
 		return origin+destination+price;
 	}
 
