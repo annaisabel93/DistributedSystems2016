@@ -8,6 +8,16 @@
         <!--handler>
             <handler-class>example.ws.handler.HeaderHandler</handler-class>
         </handler-->
+        <!--handler>
+            <handler-class>example.ws.handler.DigitalSignatureHandler</handler-class>
+        </handler-->
+        
+        <handler>
+         <handler-class>pt.upa.transporter.ws.handler.SignatureHandler</handler-class>
+        </handler>
+        <!--handler>
+   <handler-class>pt.upa.broker.ws.handler.BrokerHandler</handler-class>
+  </handler-->
         <handler>
             <handler-class>example.ws.handler.LoggingHandler</handler-class>
         </handler>

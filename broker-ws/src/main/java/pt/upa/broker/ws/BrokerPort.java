@@ -2,15 +2,10 @@ package pt.upa.broker.ws;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import javax.xml.registry.JAXRException;
-
-//import org.apache.juddi.v3.client.transport.Transport;
-
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
-
 import pt.upa.transporter.ws.BadJobFault_Exception;
 import pt.upa.transporter.ws.BadLocationFault_Exception;
 import pt.upa.transporter.ws.BadPriceFault_Exception;

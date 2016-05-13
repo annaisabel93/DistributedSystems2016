@@ -1,0 +1,19 @@
+<handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
+ <handler-chain>
+  <handler>
+   <handler-class>pt.upa.broker.ws.handler.SignatureHandler</handler-class>
+  </handler>
+  <!--handler>
+   <handler-class>pt.upa.transporter.ws.handler.TransporterHandler</handler-class>
+  </handler-->
+  <!--handler>
+   <handler-class>example.ws.handler.DigitalSignatureHandler</handler-class>
+  </handler-->
+  <!--handler>
+   <handler-class>example.ws.handler.HeaderHandler</handler-class>
+  </handler-->
+  <handler>
+   <handler-class>example.ws.handler.LoggingHandler</handler-class>
+  </handler>
+ </handler-chain>
+</handler-chains>
