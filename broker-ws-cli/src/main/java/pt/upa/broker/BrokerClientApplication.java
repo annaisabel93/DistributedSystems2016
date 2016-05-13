@@ -13,15 +13,24 @@ import java.util.List;
 
 
 public class BrokerClientApplication {
+	
+	
+	
 
 	static BrokerClient client;
 	
     public static void main(String[] args) throws Exception {
+    	List<TransportView> transports = new ArrayList<TransportView>();
         System.out.println(BrokerClientApplication.class.getSimpleName() + " starting...");
         client = new BrokerClient("http://localhost:8080/broker-ws/endpoint");
         //String result = client.ping("client");
       // System.out.println(result);
         String request = client.requestTransport("Lisboa", "Faro", 87);
+        TransportView t = new TransportView();
+        t.setDestination("Lisboa");
+        t.setOrigin("Faro");
+        t.setPrice(87);
+        t.setId(request);
         //menu para testar apenas
         while(true){
         	//try{
@@ -38,7 +47,13 @@ public class BrokerClientApplication {
 	            	System.out.println("price?");
 	            	String price_string = br.readLine();
 	            	int price = Integer.parseInt(price_string);
-	            	client.requestTransport(origin, destiny, price);
+	            	String id = client.requestTransport(origin, destiny, price);
+	            	TransportView transport = new TransportView();
+	                t.setDestination(origin);
+	                t.setOrigin(destiny);
+	                t.setPrice(price);
+	                t.setId(id);
+	                transports.add(transport);
 	            }
 	            if(s.equals("ping")){
 	            	System.out.println("what do you want to send?");
@@ -65,10 +80,10 @@ public class BrokerClientApplication {
 	            	client.clearTransports();
 	            }
 	            if(s.equals("list")){
-	            	List<TransportView> transports = client.listTransports();
+	            	List<TransportView> transports1 = client.listTransports();
 	            	System.out.println("size: " +client.listTransports().size());
-	            	for(TransportView t : transports){
-	            		System.out.println("Origin: "+t.getOrigin()+ "|Destination: "+t.getDestination()+"|ID: "+t.getPrice());
+	            	for(TransportView t1 : transports1){
+	            		System.out.println("Origin: "+t1.getOrigin()+ "|Destination: "+t1.getDestination()+"|ID: "+t1.getPrice());
 	            	}
 	            }
 	            if(s.equals("exit")){
