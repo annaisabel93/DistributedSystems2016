@@ -15,19 +15,21 @@ import pt.upa.ca.ws.CAImplService;
 public class CAClient {
 	
 	
+	/** WS service */
+	CAImplService service = null;
+
+	/** WS port (port type is the interface, port is the implementation) */
+	CA port = null;
+
+	/** UDDI server URL */
 	private String uddiURL = null;
+
+	/** WS name */
 	private String wsName = null;
-	private String wsURL = null;
-	private CAImplService service = null;
-	private static CA port = null;
-	
-	public CAClient(String uddiURL, String wsName) throws CAClientException {
-		this.uddiURL = uddiURL;
-		this.wsName = wsName;
-		uddiLookup();
-		createStub();
-	}
-	
+
+	/** WS endpoint address */
+	private String wsURL = null; // default value is defined inside WSDL
+
 	public String getWsURL() {
 		return wsURL;
 	}
@@ -43,9 +45,22 @@ public class CAClient {
 		this.verbose = verbose;
 	}
 
+	/** constructor with provided web service URL */
+	public CAClient(String wsURL) throws CAClientException {
+		this.wsURL = wsURL;
+		createStub();
+	}
+
+	/** constructor with provided UDDI location and name */
+	public CAClient(String uddiURL, String wsName) throws CAClientException {
+		this.uddiURL = uddiURL;
+		this.wsName = wsName;
+		uddiLookup();
+		createStub();
+	}
+
 	/** UDDI lookup */
-	private void uddiLookup() throws CAClientException{
-		
+	private void uddiLookup() throws CAClientException {
 		try {
 			if (verbose)
 				System.out.printf("Contacting UDDI at %s%n", uddiURL);
@@ -69,12 +84,14 @@ public class CAClient {
 		}
 	}
 
+
 	/** Stub creation and configuration */
 	private void createStub() {
 		if (verbose)
 			System.out.println("Creating stub ...");
 		service = new CAImplService();
-		CA port = service.getCAImplPort();
+		port = service.getCAImplPort();
+		
 
 		if (wsURL != null) {
 			if (verbose)
@@ -85,43 +102,8 @@ public class CAClient {
 			requestContext.put(ENDPOINT_ADDRESS_PROPERTY, wsURL);
 		}
 	}
-	
-	public static void main(String[] args) throws Exception {
-		// Check arguments
-		if (args.length < 2) {
-			System.err.println("Argument(s) missing!");
-			System.err.printf("Usage: java %s uddiURL name%n", CAClient.class.getName());
-			return;
-		}
-
-		String uddiURL = args[0];
-		String name = args[1];
-
-		System.out.printf("Contacting UDDI at %s%n", uddiURL);
-		UDDINaming uddiNaming = new UDDINaming(uddiURL);
-
-		System.out.printf("Looking for '%s'%n", name);
-		String endpointAddress = uddiNaming.lookup(name);
-
-		if (endpointAddress == null) {
-			System.out.println("Not found!");
-			return;
-		} else {
-			System.out.printf("Found %s%n", endpointAddress);
-		}
-
-		System.out.println("Creating stub ...");
-		CAImplService service = new CAImplService();
-		port = service.getCAImplPort();
-
-		System.out.println("Setting endpoint address ...");
-		BindingProvider bindingProvider = (BindingProvider) port;
-		Map<String, Object> requestContext = bindingProvider.getRequestContext();
-		requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
-
-		System.out.println("Remote call ...");
-		byte[] result = port.getCertificate();
-		System.out.println(result);
+	public byte[] getCertificateFromCA(){
+		return port.getCertificate();
 	}
 
 }

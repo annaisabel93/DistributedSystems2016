@@ -31,7 +31,7 @@
         <ws.url>http://localhost:8086/ca-ws/endpoint</ws.url>
         <wsdl.url>${ws.url}?WSDL</wsdl.url>
 
-        <mainclass>pt.upa.ca.ws.cli.CAClient</mainclass>
+        <mainclass>pt.upa.CAClientApplication</mainclass>
 
         <uddi.url>http://localhost:9090</uddi.url>
         <ws.name>ca</ws.name>
