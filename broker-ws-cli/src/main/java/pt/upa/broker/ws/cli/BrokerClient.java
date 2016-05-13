@@ -39,7 +39,7 @@ public class BrokerClient implements BrokerPortType {
 		}
 		catch(WebServiceException e){
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -56,7 +56,7 @@ public class BrokerClient implements BrokerPortType {
 		}
 		catch(WebServiceException e){
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(6000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -71,7 +71,7 @@ public class BrokerClient implements BrokerPortType {
 		}
 		catch(WebServiceException e){
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(6000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -86,7 +86,7 @@ public class BrokerClient implements BrokerPortType {
 		}
 		catch(WebServiceException e){
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(6000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -101,7 +101,7 @@ public class BrokerClient implements BrokerPortType {
 		}
 		catch(WebServiceException e){
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(6000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -116,7 +116,7 @@ public class BrokerClient implements BrokerPortType {
 		}
 		catch(WebServiceException e){
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(6000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}

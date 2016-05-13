@@ -130,6 +130,9 @@ public class BrokerPort implements BrokerPortType{
 		if(name.equals("exit")){
 			System.exit(0);
 		}
+		if(name.equals("isAlive")){
+			return "yes";
+		}
 		Collection<String> urls = null;
 		List<TransporterClient> clientList = null;
 		String pings = "Broker responding to: " + name;

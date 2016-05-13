@@ -69,7 +69,7 @@ public class BrokerApplication {
 			boolean wasBorn = false;
 			if (secundary == true){
 				while(isAlive == true){
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 						try{
 							BrokerClient client = new BrokerClient("http://localhost:8080/broker-ws/endpoint");
 							client.ping("teste");
