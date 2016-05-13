@@ -1,13 +1,11 @@
 package pt.upa.transporter.ws;
+
 import java.util.Date;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
-
-
 
 
 @WebService(
@@ -19,7 +17,7 @@ import javax.jws.WebService;
     serviceName="TransporterService"
 )
 
-//@HandlerChain(file = "/handler-chain.xml")
+@HandlerChain(file = "/handler-chain.xml")
 
 public class TransporterPort implements TransporterPortType{
 	private List<JobView> jobs = new ArrayList<JobView>();
